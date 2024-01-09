@@ -19,6 +19,7 @@ app.use(express.json());
 //middleware for processing CORS POLICY
 app.use(cors());
 
+//Routes
 app.use("/specification", categoryRoutes);
 app.use("/configuration", subCategoryRoutes);
 app.use("/product", productRoutes);

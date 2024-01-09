@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 const SingleProductIconSized = ({ item, onClose }) => {
   const navigate = useNavigate();
   useEffect(() => {
-    console.log(item);
+    // console.log(item);
   }, []);
 
   const handleOnclick = () => {
     navigate(`/product_details/${item.id}`);
     onClose();
   };
-  
+
   return (
     <div
       className="mb-4 border-2 border-slate-400 w-[200px] rounded-md flex flex-col cursor-pointer p-2"

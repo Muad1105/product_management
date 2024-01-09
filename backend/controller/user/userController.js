@@ -1,4 +1,7 @@
-import { User } from "../model/userModel.js";
+import { User } from "../../model/userModel.js";
+import bcrypt from "bcrypt";
+
+const saltRounds = 10; // Number of salt rounds for bcrypt
 
 const userController = {};
 
@@ -13,12 +16,17 @@ userController.createUser = async (request, response) => {
         .send("Send all required fields: Name, Password, email");
     }
 
+    //Hash the password
+    const hashedPassword = await bcrypt.hash(request.body.password, saltRounds);
+
     const newUser = {
       name: request.body.name,
-      password: request.body.password,
+      password: hashedPassword,
       email: request.body.email,
     };
-    const user = await User.create(newUser);
+
+    await User.create(newUser);
+
     return response.status(201).send(user);
   } catch (error) {
     console.log(error);
@@ -61,6 +69,17 @@ userController.editUserById = async (request, response) => {
         .status(400)
         .send("Send all required fields: Name, Password, email");
     }
+
+    // Extract the user ID from the JWT payload
+    const loggedInUserId = request.user.id;
+
+    // Check if the logged-in user is authorized to edit this user
+    if (id !== loggedInUserId) {
+      return response.status(403).json({
+        message: "Forbidden: You are not authorized to edit this user",
+      });
+    }
+
     const newUser = {
       name: request.body.name,
       password: request.body.password,
@@ -78,7 +97,14 @@ userController.editUserById = async (request, response) => {
 userController.deleteUserById = async (request, response) => {
   try {
     const id = request.params.id;
-    const result = await User.findByIdAndDelete(id);
+
+    // Check if the logged-in user is authorized to delete this user
+    if (id !== request.user.id) {
+      return response.status(403).json({
+        message: "Forbidden: You are not authorized to delete this user",
+      });
+    }
+    await User.findByIdAndDelete(id);
     if (!id) {
       console.log("No Result");
       return response.status(400).json({ message: "User Not Found" });

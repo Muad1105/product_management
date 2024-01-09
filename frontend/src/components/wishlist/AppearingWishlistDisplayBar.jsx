@@ -72,9 +72,13 @@ const AppearingWishlistDisplayBar = ({ onClose }) => {
             <div className="font-bold underline flex">
               <div className="">Wishlist Items</div>
             </div>
-            {availableWishlistProducts.map((item) => (
-              <SingleProductIconSized item={item} onClose={handleOnclick} />
-            ))}
+            {availableWishlistProducts[0] ? (
+              availableWishlistProducts.map((item) => (
+                <SingleProductIconSized item={item} onClose={handleOnclick} />
+              ))
+            ) : (
+              <div>No Products</div>
+            )}
           </div>
         )}
       </div>

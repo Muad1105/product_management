@@ -1,17 +1,26 @@
-import React, { useEffect } from "react";
-import Navbar from "../components/home/Navbar";
+import React, { useEffect, useState } from "react";
+import Navbar from "./components/Navbar";
 import SideBar from "../components/home/SideBar";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ProductsDisplaySection from "../components/home/product/ProductsDisplaySection";
 import { useDispatch } from "react-redux";
-import { storeLoggedInUserId } from "../redux/reducer";
+import { storeLoggedInUserId } from "../redux/userReducer";
 import { useParams } from "react-router-dom";
 
 const Home = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
+    console.log(id);
     dispatch(storeLoggedInUserId(id));
+  }, []);
+  // Logged user store state
+  const [loggedInUserId, setLoggedInUserId] = useState("");
+
+  const userId = useParams().id;
+
+  useEffect(() => {
+    dispatch(storeLoggedInUserId(userId));
   }, []);
 
   return (

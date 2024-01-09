@@ -19,13 +19,9 @@ export const createWishlist = createSlice({
         : state.value.push(action.payload);
       localStorage.setItem("wishlist", JSON.stringify(state.value));
     },
-    storeLoggedInUserId: (state, action) => {
-      console.log(action.payload);
-      state.loggedInUserId = action.payload;
-    },
   },
 });
 
-export const { saveToWishlist, storeLoggedInUserId } = createWishlist.actions;
+export const { saveToWishlist } = createWishlist.actions;
 
 export default createWishlist.reducer;

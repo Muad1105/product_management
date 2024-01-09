@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import { useParams } from "react-router-dom";
-import AddSpecification from "../../AddSpecification";
-import AddSubCategory from "../../AddConfiguration";
-import AddProduct from "./AddProduct";
+import AddSpecification from "./AddSpecification";
+import AddSubCategory from "./AddConfiguration";
+import AddProduct from "../components/AddProduct";
 import ProductList from "./ProductList";
 
 const ProductsDisplaySection = () => {

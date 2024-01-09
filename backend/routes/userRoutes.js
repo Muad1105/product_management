@@ -2,23 +2,36 @@ import express from "express";
 
 const userRoutes = express.Router();
 
-import userController from "../controller/userController.js";
+import createUser from "../controller/user/createUserController.js";
+import editUserById from "../controller/user/editUserController.js";
+
+import { getAllUsers } from "../controller/user/getUserController.js";
+
+import { getUserById } from "../controller/user/getUserController.js";
+
+import deleteUserById from "../controller/user/deleteUserController.js";
+
+import authMiddleware from "../middleware/authMiddleware.js";
 
 //Create user
-userRoutes.post("/", userController.createUser);
+userRoutes.post("/", createUser);
+//Signup user
+// userRoutes.post("/signup", userController.createUser);
+//signin user
+// userRoutes.post("/signin", userController.createUser);
 
 //Get all users
-userRoutes.get("/", userController.getAllUsers);
+userRoutes.get("/", getAllUsers);
 
 //Get User by ID
 
-userRoutes.get("/:id", userController.getUserById);
+userRoutes.get("/:id", getUserById);
 
 //  Edit User by ID
 
-userRoutes.put("/:id", userController.editUserById);
+userRoutes.put("/:id", editUserById);
 
 // Delete User by ID
-userRoutes.delete("/:id", userController.deleteUserById);
+userRoutes.delete("/:id", deleteUserById);
 
 export default userRoutes;

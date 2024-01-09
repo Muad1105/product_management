@@ -10,15 +10,17 @@ import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 
+import { useSnackbar } from "notistack";
+
 const SignUp = () => {
   const [newUser, setNewUser] = useState({
-    userName: "",
+    username: "",
     password: "",
     reEnterPassword: "",
     email: "",
   });
   const [validNewUser, setValidNewUser] = useState({
-    validUserName: false,
+    validUsername: false,
     validPassword: false,
     validReEnterPassword: false,
   });
@@ -36,17 +38,20 @@ const SignUp = () => {
   const nameRegEx = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,}/;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%*_]).{4,}$/;
 
+  // notification
+  const { enqueueSnackbar } = useSnackbar();
+
   const validateUserInputs = () => {
     console.log(
       "value",
       validEmail,
-      validNewUser.validUserName,
+      validNewUser.validUsername,
       validNewUser.validPassword,
       validNewUser.validReEnterPassword
     );
     if (
       validEmail &&
-      validNewUser.validUserName &&
+      validNewUser.validUsername &&
       validNewUser.validPassword &&
       validNewUser.validReEnterPassword
     ) {
@@ -54,50 +59,56 @@ const SignUp = () => {
       return true;
     } else return false;
   };
-
-  const handleUserData = async () => {
+  const handleUserData = () => {
+    postData().then((res) => {
+      enqueueSnackbar("Book Created successfully", { variant: "success" });
+      navigate("/login");
+    });
+  };
+  const postData = async () => {
     console.log(newUser.email);
-    if (
-      !newUser.userName ||
-      !newUser.password ||
-      !newUser.reEnterPassword ||
-      !newUser.email ||
-      validateUserInputs()
-    ) {
-      setError(true);
-      return;
-    } else {
-      const userData = {
-        name: newUser.userName,
-        password: newUser.password,
-        email: newUser.email,
-      };
-      await axios
-        .post("http://localhost:1111/user", userData)
-        .then((res) => {
-          console.log(res);
-          navigate("/login");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    let response;
+    try {
+      if (
+        !newUser.username ||
+        !newUser.password ||
+        !newUser.reEnterPassword ||
+        !newUser.email ||
+        validateUserInputs()
+      ) {
+        setError(true);
+        return;
+      } else {
+        const userData = {
+          username: newUser.username,
+          password: newUser.password,
+          email: newUser.email,
+        };
+        response = await axios.post("http://localhost:1111/user", userData);
+      }
+      return response;
+    } catch (err) {
+      enqueueSnackbar("Error", {
+        variant: "error",
+      });
+      console.log(err);
     }
   };
 
-  const handleUserName = (item) => {
+  const handleUsername = (item) => {
     console.log();
-    setNewUser((prev) => ({ ...prev, userName: item }));
+    setNewUser((prev) => ({ ...prev, username: item }));
   };
 
   useEffect(() => {
     // validation user name
-    const userNameValid = nameRegEx.test(newUser.userName);
-    console.log(userNameValid);
+    const usernameValid = nameRegEx.test(newUser.username);
+    console.log(usernameValid);
     setValidNewUser((prev) => ({
       ...prev,
-      validUserName: userNameValid,
+      validUsername: usernameValid,
     }));
-  }, [newUser.userName]);
+  }, [newUser.username]);
 
   const handleEnteredPassword = (item) => {
     setNewUser((prev) => ({ ...prev, password: item }));
@@ -166,10 +177,10 @@ const SignUp = () => {
               name="name"
               type="text"
               className="w-full border-2 bg-slate-200 focus:border-gray-600 text-xl px-6 py-2 rounded-md text-[13px]"
-              onChange={(e) => handleUserName(e.target.value)}
+              onChange={(e) => handleUsername(e.target.value)}
             />
             <div className="absolute text-[13px] right-0 text-red-700 mb-[-100px] flex flex-col gap-y-[-30px] rounded-md p-1">
-              {newUser.userName && !validNewUser.validUserName && (
+              {newUser.username && !validNewUser.validUsername && (
                 <div className="bg-yellow-300 z-20">
                   <div className="mb-[-17px]">Enter a valid user name -</div>
                   <div>4 Charecters, 1 Smallcase, 1 Uppercase 1 Number</div>

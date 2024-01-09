@@ -1,12 +1,13 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import { useDispatch } from "react-redux";
-import { saveToWishlist } from "../../redux/reducer.jsx";
+import { saveToWishlist } from "../../redux/wishlistReducer";
 
 const AddToWishlistPopup = ({ id, onClose }) => {
   const dispatch = useDispatch();
 
   const addToWishlist = () => {
+    
     dispatch(saveToWishlist(id));
     onClose();
   };

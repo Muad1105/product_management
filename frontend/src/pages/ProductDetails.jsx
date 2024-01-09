@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/home/Navbar.jsx";
+import Navbar from "./components/Navbar.jsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Button from "@mui/material/Button";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useNavigate } from "react-router-dom";
-import AddProduct from "../components/home/product/AddProduct.jsx";
-import AddToWishlistPopup from "../components/wishlist/AddToWishlistPopup.jsx";
-import EditProduct from "../components/home/product/EditProduct.jsx";
+import AddProduct from "../components/home/components/AddProduct.jsx";
+import AddToWishlistPopup from "../components/wishlist/ConfirmAddToWishlistPopup.jsx";
+import EditProduct from "../components/home/components/EditProduct.jsx";
 
 const ProductDetails = () => {
   const [product, setProduct] = useState([]);
@@ -27,7 +27,7 @@ const ProductDetails = () => {
 
   const fetchProductData = async () => {
     await axios.get(`http://localhost:1111/product/${id}`).then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       setProduct(res.data);
     });
   };
