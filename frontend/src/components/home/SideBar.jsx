@@ -24,7 +24,7 @@ const SideBar = () => {
       setAllProducts(
         res.data.map((product) => {
           if (!uniqueProductsArray.includes(product._id)) {
-            console.log("product", product);
+            // console.log("product", product);
             uniqueProductsArray.push(product._id);
             return product;
           }

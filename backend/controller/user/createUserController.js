@@ -44,12 +44,10 @@ const createUser = async (request, response) => {
       email: request.body.email,
     };
 
-    try {
-      const addedUser = await User.create(newUser);
-      return response.status(201).json({ message: addedUser });
-    } catch (err) {
-      console.log(err);
-    }
+    console.log(newUser);
+
+    const addedUser = await User.create(newUser);
+    return response.status(201).json({ message: addedUser });
 
     return response.status(201).send(newUser);
   } catch (error) {

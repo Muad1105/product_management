@@ -17,7 +17,12 @@ const PORT = 1111;
 app.use(express.json());
 
 //middleware for processing CORS POLICY
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 //Routes
 app.use("/specification", categoryRoutes);

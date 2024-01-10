@@ -12,7 +12,7 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 
 import { useSnackbar } from "notistack";
 
-const SignUp = () => {
+const Signup = () => {
   const [newUser, setNewUser] = useState({
     username: "",
     password: "",
@@ -84,7 +84,10 @@ const SignUp = () => {
           password: newUser.password,
           email: newUser.email,
         };
-        response = await axios.post("http://localhost:1111/user", userData);
+        response = await axios.post(
+          "http://localhost:1111/user/signup",
+          userData
+        );
       }
       return response;
     } catch (err) {
@@ -284,4 +287,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Signup;

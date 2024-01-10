@@ -15,15 +15,20 @@ export const getAllUsers = async (request, response) => {
 
 // Get user by ID
 
-export const getUserById = async (request, response) => {
-  const id = request.params.id;
+export const getUser = async (request, response) => {
+  const userId = request.id ? request.id : request.params.id;
+  console.log("userID", userId);
+  let user;
   try {
-    const user = await User.findById(id);
-    console.log(user);
-    return response.status(200).json(user);
+    user = await User.findById(userId, "-password");
+    console.log("user", user);
   } catch (error) {
     console.log(error);
   }
+  if (!user) {
+    return response.status(400).json({ message: "User not found." });
+  }
+  return response.status(200).json({ user });
 };
 
 // export default getAllUsers;

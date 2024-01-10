@@ -6,7 +6,7 @@ import WishlistDisplayBar from "../../components/wishlist/AppearingWishlistDispl
 import SearchBar from "../../components/SearchBar";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { storeLoggedInUserId } from "../../redux/userReducer";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
@@ -31,16 +31,17 @@ const Navbar = () => {
   console.log(fetchLoggedInUserIdFromRedux);
 
   useEffect(() => {
+    console.log(fetchLoggedInUserIdFromRedux);
     setLoggedInUserId(fetchLoggedInUserIdFromRedux);
   }, [fetchLoggedInUserIdFromRedux]);
-
   // fetch userData on load
   const fetchUserData = async () => {
+    console.log("fetch");
     await axios
       .get(`http://localhost:1111/user/${loggedInUserId}`)
       .then((res) => {
         console.log(res.data);
-        setLoggedInUser(res.data.name);
+        setLoggedInUser(res.data.user.username);
       });
   };
 

@@ -14,47 +14,29 @@ const Login = () => {
     password: "",
   });
   // Logged in user state
-  const [loggedInUserId, setLoggedInUserId] = useState("");
   const [passwordView, setPasswordView] = useState(false);
 
   const navigate = useNavigate();
 
   // Handle login function on submit button click
   const handleLogin = async () => {
+    console.log("handleLogin");
     try {
+      const userData = enteredUserDetails;
       //Get the details to check for the user credetials availability
-      await axios.get("http://localhost:1111/user").then((response) => {
-        console.log(response);
-        const users = response.data;
-        //Find user details available from api data
-        const userLoginCredential = users.some((e, i) => {
-          console.log(enteredUserDetails, e.email, e.password);
-          if (
-            e.email === enteredUserDetails.email &&
-            e.password === enteredUserDetails.password
-          ) {
-            console.log(e._id);
-            setLoggedInUserId(e._id);
-          }
-          return (
-            e.email === enteredUserDetails.email &&
-            e.password === enteredUserDetails.password
-          );
-          console.log(e);
+      await axios
+        .post("http://localhost:1111/user/login", userData)
+        .then((response) => {
+          console.log(response);
+          const users = response.data;
+          console.log(users);
+          navigate(`/user/home`);
         });
-        console.log(userLoginCredential, loggedInUserId);
-        // if (userLoginCredential) {
-        //   navigate(`/user/${loggedInUserId}`);
-        // }
-      });
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
-    loggedInUserId && navigate(`/user/${loggedInUserId}`);
-  }, [loggedInUserId]);
 
   return (
     <div className="top-2 bg-slate w-full h-screen flex justify-center items-center">
