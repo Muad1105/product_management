@@ -5,50 +5,27 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import WishlistDisplayBar from "../../components/wishlist/AppearingWishlistDisplayBar";
 import SearchBar from "../../components/SearchBar";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { storeLoggedInUserId } from "../../redux/userReducer";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import UserAccountNavbarPopup from "./UserAccountNavbarPopup";
 
 const Navbar = () => {
   // Onclick to wishlistbar view
   const [showWishlistBar, setShowWishlistBar] = useState(false);
   // Logged user store state
-  const [loggedInUserId, setLoggedInUserId] = useState("");
+  const [loggedInUsername, setLoggedInUsername] = useState("");
   // feched user data from server
   const [loggedInUser, setLoggedInUser] = useState("");
 
   // userAccount Display
   const [userAccountPopup, setUserAccountPopup] = useState(false);
 
-  const fetchLoggedInUserIdFromRedux = useSelector(
-    (state) => state.userId.loggedInUserId
+  const loggedInUsernameFromReduxStore = useSelector(
+    (state) => state.userData.loggedInUsername.name
   );
-  console.log(fetchLoggedInUserIdFromRedux);
-
-  useEffect(() => {
-    console.log(fetchLoggedInUserIdFromRedux);
-    setLoggedInUserId(fetchLoggedInUserIdFromRedux);
-  }, [fetchLoggedInUserIdFromRedux]);
-  // fetch userData on load
-  const fetchUserData = async () => {
-    console.log("fetch");
-    await axios
-      .get(`http://localhost:1111/user/${loggedInUserId}`)
-      .then((res) => {
-        console.log(res.data);
-        setLoggedInUser(res.data.user.username);
-      });
-  };
-
-  useEffect(() => {
-    loggedInUserId && fetchUserData();
-    console.log(loggedInUserId);
-  }, [loggedInUserId]);
+  console.log(loggedInUsernameFromReduxStore);
 
   return (
     <div className="w-screen h-[70px] bg-blue-950 text-slate-100 flex justify-between items-center px-10 relative">
@@ -60,35 +37,15 @@ const Navbar = () => {
           <div className="flex gap-2">
             <div className="flex gap-2">
               <AccountCircleIcon />
-              <div>{loggedInUser}</div>
-            </div>
-            <div>
-              {userAccountPopup ? (
-                <div>
-                  <KeyboardArrowDownIcon
-                    onClick={() => setUserAccountPopup(false)}
-                  />
-                </div>
-              ) : (
-                <div>
-                  <KeyboardArrowRightIcon
-                    onClick={() => setUserAccountPopup(true)}
-                  />
-                </div>
-              )}
-            </div>
-            {userAccountPopup && (
-              <div
-                className="absolute mt-10 w-[150px] h-[50px] bg-slate-600"
-                style={{ zIndex: "300" }}
-              >
-                <div
-                  className="absolute w-[20px] h-[20px] bg-slate-600 ml-20 top-[-6px] rotate-45"
-                  style={{ zIndex: "-200" }}
-                ></div>
-                <UserAccountNavbarPopup />
+              <div>
+                User :{" "}
+                {loggedInUsernameFromReduxStore &&
+                  loggedInUsernameFromReduxStore}
               </div>
-            )}
+              <Button variant="contained" size="small">
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
         {/* Wishlist Icon */}

@@ -26,7 +26,7 @@ userRoutes.post("/login", login);
 userRoutes.get("/home", verifyToken, getUser);
 
 //refresh token
-// userRoutes.get("/refresh", refreshToken, verifyToken, getUser);
+userRoutes.get("/refresh", refreshToken, verifyToken, getUser);
 
 //Get all users
 userRoutes.get("/all-users", getAllUsers);

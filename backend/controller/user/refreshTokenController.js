@@ -1,8 +1,14 @@
 import jwt from "jsonwebtoken";
 
 const refreshToken = (req, res, next) => {
-  const cookies = req.headers.cookies;
-  const prevToken = cookies.split(" ")[1];
+  console.log("req", req.headers);
+  const cookie = req.headers.cookie;
+  console.log("headers", cookie, "cookies", cookie);
+  const prevToken = cookie.split("=")[1];
+
+  if (!cookie) {
+    return res.status(400).json({ message: "Cookie not found." });
+  }
 
   if (!prevToken) {
     return res.status(400).json({ message: "No Token Found." });
@@ -13,8 +19,8 @@ const refreshToken = (req, res, next) => {
       // access to the request source is forbidden (403)
       return res.status(403).json({ message: "Authentication failed" });
     }
-    req.clearCookie(`${user.id}`);
-    req.cookies[`${user.id}`] = "";
+    // req.cookies[`${user.id}`] = "";
+    res.clearCookie(`${user.id}`);
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
       expiresIn: "1d",

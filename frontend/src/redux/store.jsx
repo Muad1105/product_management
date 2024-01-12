@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import wishlistReducer from "./wishlistReducer.jsx";
-import userIdReducer from "./userReducer.jsx";
+import userDataReducer from "./userReducer.jsx";
 
 // Load data from local storage
 const persistedWishlist = localStorage.getItem("wishlist");
@@ -9,19 +9,19 @@ const persistedWishlistInitialState = persistedWishlist
   ? { wishlist: { value: JSON.parse(persistedWishlist) } }
   : {};
 
-const persistedUserId = localStorage.getItem("wishlist");
+const persistedUserData = localStorage.getItem("wishlist");
 
-const persistedUserIdInitialState = persistedUserId
-  ? { wishlist: { value: JSON.parse(persistedUserId) } }
+const persistedUseraDataInitialState = persistedUserData
+  ? { wishlist: { value: JSON.parse(persistedUserData) } }
   : {};
 
 export const store = configureStore({
   reducer: {
     wishlist: wishlistReducer,
-    userId: userIdReducer,
+    userData: userDataReducer,
   },
   preloadedWishlistState: persistedWishlistInitialState,
-  preloadedUserIdState: persistedUserIdInitialState,
+  preloadedUserdataState: persistedUseraDataInitialState,
 });
 
 // Subscribe to store changes and save to local storage
