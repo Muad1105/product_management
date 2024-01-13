@@ -3,10 +3,12 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import productRoutes from "./routes/product/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import categoryRoutes from "./routes/product/specificationRoutes.js";
-import subCategoryRoutes from "./routes/product/configurationRoutes.js";
 
 import cors from "cors";
+import brandRoutes from "./routes/product/brandRoutes.js";
+import itemCategoryRoutes from "./routes/product/itemCategoryRoutes.js";
+import specificationsRoutes from "./routes/product/specificationRoutes.js";
+import configurationRoutes from "./routes/product/configurationRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -25,8 +27,10 @@ app.use(
 );
 
 //Routes
-app.use("/specification", categoryRoutes);
-app.use("/configuration", subCategoryRoutes);
+app.use("/brand", brandRoutes);
+app.use("/itemCategory", itemCategoryRoutes);
+app.use("/specification", specificationsRoutes);
+app.use("/configuration", configurationRoutes);
 app.use("/product", productRoutes);
 app.use("/user", userRoutes);
 

@@ -1,5 +1,5 @@
 import { response } from "express";
-import { Specification } from "../../model/product/specificationModal.js";
+import { Specification } from "../../model/product/specificationModel.js";
 
 const specificationControllers = {};
 

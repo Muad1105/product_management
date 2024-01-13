@@ -1,4 +1,4 @@
-import { User } from "../../model/userModel.js";
+import { User } from "../../model/user/userModel.js";
 import bcrypt from "bcrypt";
 
 import { generateToken } from "../../middleware/authUtils.js";
@@ -9,12 +9,13 @@ const saltRounds = 10; // Number of salt rounds for bcrypt
 
 const createUser = async (request, response) => {
   console.log("request.body", request.body);
+  const { email, username, password, wishlist } = request.body;
   try {
-    //   check if the user exists
     let existingUser;
+    //   check if the user exists
     try {
       console.log("try existing user");
-      existingUser = await User.findOne({ email: request.body.email });
+      existingUser = await User.findOne({ email: email });
     } catch (err) {
       return new Error(err);
     }
@@ -25,23 +26,19 @@ const createUser = async (request, response) => {
         .json({ message: "User already exists, Please login" });
     }
     console.log("body");
-    if (
-      !request.body.username ||
-      !request.body.password ||
-      !request.body.email
-    ) {
+    if (!username || !password || !email) {
       return response
         .status(400)
         .send("Send all required fields: Name, Password, email");
     }
     console.log("hash pass");
     //Hash the password
-    const hashedPassword = await bcrypt.hash(request.body.password, saltRounds);
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const newUser = {
-      username: request.body.username,
+      username: username,
       password: hashedPassword,
-      email: request.body.email,
+      email: email,
     };
 
     console.log(newUser);
