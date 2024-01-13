@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import axios from "axios";
+import { useSnackbar } from "notistack";
 
 const AddSpecification = ({ onClose }) => {
   const [specification, setSpecification] = useState("");
   const [inputError, setInputError] = useState(false);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const handleSpecificationDetails = async () => {
     const trimmedSpecification = specification.trim();
+
     let data;
 
     if (trimmedSpecification === "") {
@@ -22,6 +26,9 @@ const AddSpecification = ({ onClose }) => {
           .post("http://localhost:1111/specification", data)
           .then((res) => {
             console.log(res);
+            enqueueSnackbar("Brand Created Succesfully", {
+              variant: "success",
+            });
             onClose();
           })
           .catch((error) => console.log(error));

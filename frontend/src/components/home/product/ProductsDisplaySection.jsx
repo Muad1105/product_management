@@ -5,13 +5,15 @@ import AddSpecification from "./AddSpecification";
 import AddSubCategory from "./AddConfiguration";
 import AddProduct from "../components/AddProduct";
 import ProductList from "./ProductList";
+import AddItemCategory from "./AddItemCategory";
+import AddBrand from "./AddBrand";
 
 const ProductsDisplaySection = () => {
-  const [showCategoryModel, setShowCategoryModel] = useState(false);
-  const [showSubCategoryModel, setShowSubCategoryModel] = useState(false);
+  const [showBrandModel, setShowBrandModel] = useState(false);
+  const [showItemCategoryModel, setShowItemCategoryModel] = useState(false);
+  const [showSpecificationModel, setShowSpecificationModel] = useState(false);
+  const [showConfigurationModel, setShowConfigurationModel] = useState(false);
   const [showProductModel, setShowProductModel] = useState(false);
-
-  const id = useParams().id;
 
   return (
     <div className="w-[83vw] h-full relative pt-4">
@@ -26,7 +28,35 @@ const ProductsDisplaySection = () => {
                 borderRadius: "15px",
               }}
               size="medium"
-              onClick={() => setShowCategoryModel(true)}
+              onClick={() => setShowItemCategoryModel(true)}
+            >
+              Add Item Category
+            </Button>
+          </div>
+          <div>
+            <Button
+              variant="contained"
+              style={{
+                background: "yellow",
+                color: "Black",
+                borderRadius: "15px",
+              }}
+              size="medium"
+              onClick={() => setShowBrandModel(true)}
+            >
+              Add Brand
+            </Button>
+          </div>
+          <div>
+            <Button
+              variant="contained"
+              style={{
+                background: "yellow",
+                color: "Black",
+                borderRadius: "15px",
+              }}
+              size="medium"
+              onClick={() => setShowSpecificationModel(true)}
             >
               Add Specification
             </Button>
@@ -40,7 +70,7 @@ const ProductsDisplaySection = () => {
                 borderRadius: "15px",
               }}
               size="medium"
-              onClick={() => setShowSubCategoryModel(true)}
+              onClick={() => setShowConfigurationModel(true)}
             >
               Add Configuration
             </Button>
@@ -60,11 +90,17 @@ const ProductsDisplaySection = () => {
             </Button>
           </div>
         </div>
-        {showCategoryModel && (
-          <AddSpecification onClose={() => setShowCategoryModel(false)} />
+        {showItemCategoryModel && (
+          <AddItemCategory onClose={() => setShowItemCategoryModel(false)} />
         )}
-        {showSubCategoryModel && (
-          <AddSubCategory onClose={() => setShowSubCategoryModel(false)} />
+        {showBrandModel && (
+          <AddBrand onClose={() => setShowBrandModel(false)} />
+        )}{" "}
+        {showSpecificationModel && (
+          <AddSpecification onClose={() => setShowSpecificationModel(false)} />
+        )}
+        {showConfigurationModel && (
+          <AddSubCategory onClose={() => setShowConfigurationModel(false)} />
         )}
         {showProductModel && (
           <AddProduct onClose={() => setShowProductModel(false)} />

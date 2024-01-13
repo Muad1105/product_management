@@ -6,6 +6,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { useSnackbar } from "notistack";
 
 const AddProduct = ({ id, onClose }) => {
   const [productDetails, setProductDetails] = useState({
@@ -23,12 +24,35 @@ const AddProduct = ({ id, onClose }) => {
   const [inputError, setInputError] = useState(false);
 
   // Fetch state data specification and configuration
-  const [specifications, setSpecifications] = useState([]);
-  const [configurations, setConfigurations] = useState([]);
+  const [allSpecifications, setAllSpecifications] = useState([]);
+  const [allConfigurations, setAllConfigurations] = useState([]);
+  const [allItemCategories, setAllItemCategories] = useState([]);
+  const [allBrands, setAllBrands] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
+    fetchItemCategories();
+    fetchBrands();
     fetchSpecification();
   }, []);
+
+  const fetchItemCategories = async () => {
+    const res = await axios
+      .get("http://localhost:1111/itemCategory/allItemCategories")
+      .catch((err) => console.log(err));
+    const data = await res.data;
+    console.log(data);
+    setAllItemCategories(data);
+  };
+
+  const fetchBrands = async () => {
+    const res = await axios
+      .get("http://localhost:1111/brand/allBrands")
+      .catch((err) => console.log(err));
+    console.log(res.data.allBrands);
+    const data = await res.data.allBrands;
+    setAllBrands(data);
+  };
 
   const fetchSpecification = async () => {
     console.log("fetch");
@@ -36,7 +60,7 @@ const AddProduct = ({ id, onClose }) => {
       .get("http://localhost:1111/specification")
       .then((res) => {
         console.log("fetch specification", res.data);
-        setSpecifications((prev) => [...res.data]);
+        setAllSpecifications((prev) => [...res.data]);
       })
       .catch((error) => console.log(error));
   };
@@ -98,6 +122,10 @@ const AddProduct = ({ id, onClose }) => {
         .then((res) => {
           console.log(res);
           setInputError(false);
+          enqueueSnackbar("Product Created Succesfully", {
+            variant: "success",
+          });
+
           onClose();
         })
         .catch((error) => console.log(error));
@@ -113,7 +141,7 @@ const AddProduct = ({ id, onClose }) => {
     console.log(selectedSpecificationId);
     await axios.get("http://localhost:1111/configuration").then((res) => {
       console.log(res, "selectedSpecificationId", selectedSpecificationId);
-      setConfigurations(
+      setAllConfigurations(
         res.data.filter((e) => {
           console.log(selectedSpecificationId, e.specificationId);
           return e.specificationId == selectedSpecificationId;
@@ -139,35 +167,92 @@ const AddProduct = ({ id, onClose }) => {
         className="w-[650px] h-[550px] rounded-xl pt-6 flex flex-col justify-center items-center bg-slate-100 relative"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="my-4 font-bold text-xl">Add Specification</div>
+        <div className="my-4 font-bold text-xl">Add Product</div>
         <div className="flex flex-col gap-y-2 w-[100%] px-6 py-4 h-full overflow-y-scroll">
-          {/* itemCategory Input */}
-          <div className="flex space-between">
-            <label className="w-[200px]">Item Category : </label>
-            <input
-              type="text"
-              className="border-2 border-slate-400 rounded-md w-full px-4 py-1"
-              onChange={(e) =>
-                setProductDetails((prev) => ({
-                  ...prev,
-                  itemCategory: e.target.value,
-                }))
-              }
-            />
-          </div>
-          {/* Brand Input */}
-          <div className="flex space-between ">
-            <label className="w-[200px]">Brand : </label>
-            <input
-              type="text"
-              className="border-2 border-slate-400 rounded-md w-full px-4 py-1"
-              onChange={(e) =>
-                setProductDetails((prev) => ({
-                  ...prev,
-                  brand: e.target.value,
-                }))
-              }
-            />
+          <div className="flex gap-x-4">
+            {/* itemCategory Input */}
+            <div className="flex space-between gap-x-4  items-center">
+              <label htmlFor="" className="flex">
+                Item Category
+                <span>:</span>
+              </label>
+              <Box
+                sx={{
+                  minWidth: 150,
+                  minHeight: 40,
+                  backgroundColor: "white",
+                  borderRadius: 1,
+                }}
+              >
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Item Category
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={productDetails.itemCategory}
+                    label="Sub Specification"
+                    onChange={(e) =>
+                      setProductDetails((prev) => ({
+                        ...prev,
+                        itemCategory: e.target.value,
+                      }))
+                    }
+                  >
+                    {allItemCategories &&
+                      allItemCategories.map((e, i) => {
+                        console.log(e);
+                        return (
+                          <MenuItem key={e._id} value={e._id}>
+                            {e.name}
+                          </MenuItem>
+                        );
+                      })}
+                  </Select>
+                </FormControl>
+              </Box>
+            </div>
+            {/* Brand Input */}
+            <div className="flex space-between gap-x-4  items-center">
+              <label htmlFor="" className="flex">
+                Brand <span>:</span>
+              </label>
+              <Box
+                sx={{
+                  minWidth: 150,
+                  minHeight: 40,
+                  backgroundColor: "white",
+                  borderRadius: 1,
+                }}
+              >
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Brand</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={productDetails.brand}
+                    label="Sub Specification"
+                    onChange={(e) =>
+                      setProductDetails((prev) => ({
+                        ...prev,
+                        brand: e.target.value,
+                      }))
+                    }
+                  >
+                    {allBrands &&
+                      allBrands.map((e, i) => {
+                        console.log(e);
+                        return (
+                          <MenuItem key={e._id} value={e._id}>
+                            {e.name}
+                          </MenuItem>
+                        );
+                      })}
+                  </Select>
+                </FormControl>
+              </Box>
+            </div>
           </div>
           {/* title Input */}
           <div className="flex space-between ">
@@ -217,7 +302,7 @@ const AddProduct = ({ id, onClose }) => {
                           }))
                         }
                       >
-                        {specifications.map((e, i) => {
+                        {allSpecifications.map((e, i) => {
                           console.log(e);
                           return (
                             <MenuItem
@@ -262,8 +347,8 @@ const AddProduct = ({ id, onClose }) => {
                           }))
                         }
                       >
-                        {configurations &&
-                          configurations.map((e, i) => {
+                        {allConfigurations &&
+                          allConfigurations.map((e, i) => {
                             console.log(e);
                             return (
                               <MenuItem key={e._id} value={e._id}>

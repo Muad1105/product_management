@@ -6,6 +6,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { useSnackbar } from "notistack";
 
 const AddConfiguration = ({ onClose }) => {
   //Specification item State
@@ -27,6 +28,8 @@ const AddConfiguration = ({ onClose }) => {
   useEffect(() => {
     fetchSpecification();
   }, []);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   // Check availableSpecificationDetails
   useEffect(() => {
@@ -57,6 +60,9 @@ const AddConfiguration = ({ onClose }) => {
         .post("http://localhost:1111/configuration", data)
         .then((res) => {
           console.log(res);
+          enqueueSnackbar("Brand Created Succesfully", {
+            variant: "success",
+          });
           onClose();
         })
         .catch((error) => console.log(error));
