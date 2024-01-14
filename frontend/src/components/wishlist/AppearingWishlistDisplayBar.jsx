@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import SingleProductIconSized from "../home/product/SingleProductIconSized";
+import SingleProductIconSized from "../home/product/SingleProductDisplayHomePageIconSized";
 import axios from "axios";
 import Loading from "../Loading";
 

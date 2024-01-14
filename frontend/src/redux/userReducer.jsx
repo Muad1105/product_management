@@ -1,7 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const user =
+  localStorage.getItem("userData") !== null
+    ? JSON.parse(localStorage.getItem("userData"))
+    : "";
+
 const initialState = {
-  loggedInUsername: "",
+  loggedInUsername: user,
 };
 
 export const userSlice = createSlice({
@@ -11,11 +16,15 @@ export const userSlice = createSlice({
     storeLoggedInUsername: (state, action) => {
       console.log(action.payload);
       state.loggedInUsername = action.payload;
-      localStorage.setItem("userData", state.loggedInUsername);
+      localStorage.setItem("userData", JSON.stringify(state.loggedInUsername));
+    },
+    userLoggedOut: (state, action) => {
+      console.log("logout");
+      localStorage.removeItem("userData");
     },
   },
 });
 
-export const { storeLoggedInUsername } = userSlice.actions;
+export const { storeLoggedInUsername, userLoggedOut } = userSlice.actions;
 
 export default userSlice.reducer;

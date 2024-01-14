@@ -16,20 +16,23 @@ export const getAllUsers = async (request, response) => {
 // Get user by ID
 
 export const getUser = async (request, response) => {
-  console.log(request);
+  // console.log(request);
   const userId = request.id;
   console.log("userID", userId);
   let user;
   try {
     user = await User.findById(userId, "-password");
     console.log("user", user);
+    if (!user) {
+      console.log("User Not Found");
+      return response.status(400).json({ message: "User not found." });
+    }
+    console.log("Sending Response");
+    return response.status(200).json({ user });
   } catch (error) {
     console.log(error);
+    response.status(500).json({ message: "Internal Server Error" });
   }
-  if (!user) {
-    return response.status(400).json({ message: "User not found." });
-  }
-  return response.status(200).json({ user });
 };
 
 // export default getAllUsers;

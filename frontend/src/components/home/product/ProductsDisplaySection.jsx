@@ -16,7 +16,7 @@ const ProductsDisplaySection = () => {
   const [showProductModel, setShowProductModel] = useState(false);
 
   return (
-    <div className="w-[83vw] h-full relative pt-4">
+    <div className="w-[83vw] h-full relative mt-20">
       <div>
         <div className="absolute right-10 flex gap-x-6">
           <div>

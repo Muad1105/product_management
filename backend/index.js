@@ -10,10 +10,21 @@ import itemCategoryRoutes from "./routes/product/itemCategoryRoutes.js";
 import specificationsRoutes from "./routes/product/specificationRoutes.js";
 import configurationRoutes from "./routes/product/configurationRoutes.js";
 dotenv.config();
+import session from "express-session";
 
 const app = express();
 
 const PORT = 1111;
+
+// session controller to pass data from one controller to another
+
+app.use(
+  session({
+    secret: process.env.JWT_SECRET_KEY,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 //middleware for parsing request body
 app.use(express.json());

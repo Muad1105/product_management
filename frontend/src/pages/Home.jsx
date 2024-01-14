@@ -30,16 +30,6 @@ const Home = () => {
 
   useEffect(() => {
     sendRequest().then((data) => handleResponse(data));
-    // if (firstRender) {
-    //   firstRender = false;
-    // Access user data and send back the request
-    // } else {
-    //   let interval = setInterval(() => {
-    //     refreshToken().then((data) => handleResponse(data));
-    //   }, 1000 * 28);
-
-    //   return () => clearInterval(interval);
-    // }
   }, []);
 
   //Refresh user credentials comprising cookie and token
@@ -67,18 +57,10 @@ const Home = () => {
 
   return (
     <div className="">
-      {/* Navbar on top */}
-      <Navbar />
       <div className="flex ">
         {/* Home Button and dropdown sidebar */}
         <div className="flex flex-col p-6 gap-8">
-          <div className="w-[15vw] px-4 flex ">
-            Home
-            <span className="px-4">
-              <ArrowForwardIosIcon />
-            </span>
-          </div>
-          <SideBar className="w-[10vw]" />
+          <SideBar />
         </div>
         <div className="flex">
           <ProductsDisplaySection />

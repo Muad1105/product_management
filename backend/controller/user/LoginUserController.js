@@ -31,6 +31,7 @@ const login = async (req, res, next) => {
     expiresIn: "1d",
   });
 
+  req.session.token = token;
   //Cookie
 
   res.cookie(String(existingUser._id), token, {

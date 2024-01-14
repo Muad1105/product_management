@@ -8,7 +8,7 @@ const saltRounds = 10; // Number of salt rounds for bcrypt
 //Create user
 
 const createUser = async (request, response) => {
-  console.log("request.body", request.body);
+  console.log("signup request.body", request.body);
   const { email, username, password, wishlist } = request.body;
   try {
     let existingUser;
@@ -26,7 +26,9 @@ const createUser = async (request, response) => {
         .json({ message: "User already exists, Please login" });
     }
     console.log("body");
+    console.log(username, password, email);
     if (!username || !password || !email) {
+      console.log("value missing");
       return response
         .status(400)
         .send("Send all required fields: Name, Password, email");
@@ -45,8 +47,6 @@ const createUser = async (request, response) => {
 
     const addedUser = await User.create(newUser);
     return response.status(201).json({ message: addedUser });
-
-    return response.status(201).send(newUser);
   } catch (error) {
     console.log(error);
   }

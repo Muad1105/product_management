@@ -8,6 +8,10 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useSnackbar } from "notistack";
 
+import { useSelector, useDispatch } from "react-redux";
+
+import { setProductPosted } from "../../../redux/productReducer";
+
 const AddProduct = ({ id, onClose }) => {
   const [productDetails, setProductDetails] = useState({
     itemCategory: "",
@@ -28,13 +32,19 @@ const AddProduct = ({ id, onClose }) => {
   const [allConfigurations, setAllConfigurations] = useState([]);
   const [allItemCategories, setAllItemCategories] = useState([]);
   const [allBrands, setAllBrands] = useState([]);
-  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     fetchItemCategories();
     fetchBrands();
     fetchSpecification();
   }, []);
+
+  const productAdded = useSelector((state) => state);
+  console.log(productAdded);
+
+  const dispatch = useDispatch();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const fetchItemCategories = async () => {
     const res = await axios
@@ -121,11 +131,10 @@ const AddProduct = ({ id, onClose }) => {
         })
         .then((res) => {
           console.log(res);
-          setInputError(false);
           enqueueSnackbar("Product Created Succesfully", {
             variant: "success",
           });
-
+          dispatch(setProductPosted());
           onClose();
         })
         .catch((error) => console.log(error));

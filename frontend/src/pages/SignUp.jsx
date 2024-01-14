@@ -47,34 +47,34 @@ const Signup = () => {
       validEmail,
       validNewUser.validUsername,
       validNewUser.validPassword,
-      validNewUser.validReEnterPassword
+      passwordsMatch
     );
     if (
       validEmail &&
       validNewUser.validUsername &&
       validNewUser.validPassword &&
-      validNewUser.validReEnterPassword
+      passwordsMatch
     ) {
       console.log("Value");
       return true;
     } else return false;
   };
-  const handleUserData = () => {
-    postData().then((res) => {
-      enqueueSnackbar("Book Created successfully", { variant: "success" });
-      navigate("/login");
-    });
-  };
-  const postData = async () => {
+  
+  const handleUserData = async () => {
     console.log(newUser.email);
-    let response;
     try {
+      console.log(
+        newUser.username,
+        newUser.password,
+        newUser.reEnterPassword,
+        newUser.email
+      );
       if (
         !newUser.username ||
         !newUser.password ||
         !newUser.reEnterPassword ||
         !newUser.email ||
-        validateUserInputs()
+        !validateUserInputs()
       ) {
         setError(true);
         return;
@@ -84,12 +84,18 @@ const Signup = () => {
           password: newUser.password,
           email: newUser.email,
         };
-        response = await axios.post(
-          "http://localhost:1111/user/signup",
-          userData
-        );
+        console.log(userData);
+        const res = await axios
+          .post("http://localhost:1111/user/signup", userData)
+          .then((res) => {
+            enqueueSnackbar("Book Created successfully", {
+              variant: "success",
+            });
+            navigate("/login");
+          })
+          .catch((err) => console.log(err));
       }
-      return response;
+      return res;
     } catch (err) {
       enqueueSnackbar("Error", {
         variant: "error",
@@ -200,7 +206,7 @@ const Signup = () => {
             <input
               placeholder="email"
               name="email"
-              type="text"
+              type="email"
               className="w-full border-2 bg-slate-200 focus:border-gray-600 text-xl px-6 py-2 rounded-md text-[13px]"
               onChange={(e) => handleEmail(e.target.value)}
             />

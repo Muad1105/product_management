@@ -11,6 +11,10 @@ brandRoutes.post("/", brandController.createBrand);
 
 brandRoutes.get("/allBrands", brandController.getAllBrands);
 
+//Get all brands
+
+brandRoutes.get("/:id", brandController.getBrandById);
+
 //Delete Brand
 
 brandRoutes.delete("/", brandController.deleteBrand);

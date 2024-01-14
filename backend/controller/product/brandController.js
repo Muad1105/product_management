@@ -36,6 +36,18 @@ brandController.getAllBrands = async (req, res, next) => {
   }
 };
 
+brandController.getBrandById = async (req, res, next) => {
+  try {
+    console.log("id find brand");
+    const id = req.params.id;
+    const brand = await Brand.findById(id);
+    console.log(brand);
+    res.status(200).send(brand);
+  } catch (err) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 brandController.deleteBrand = async (req, res, next) => {
   const id = req.params.id;
   await Brand.findOneAndDelete(id);

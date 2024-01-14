@@ -6,51 +6,36 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useNavigate } from "react-router-dom";
-import AddProduct from "../components/home/components/AddProduct.jsx";
 import AddToWishlistPopup from "../components/wishlist/ConfirmAddToWishlistPopup.jsx";
 import EditProduct from "../components/home/components/EditProduct.jsx";
+import { useSelector } from "react-redux";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import { styled, useTheme } from "@mui/material/styles";
+import MuiAppBar from "@mui/material/AppBar";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const ProductDetails = () => {
   const [product, setProduct] = useState([]);
-  const [category, setCategory] = useState([]);
-  const [allSubCategory, setAllSubCategory] = useState([]);
-  const [subCategoryToDisplay, setSubCategoryToDisplay] = useState([]);
   const [editProductModal, setEditProductModal] = useState(false);
   const [wishlistConfirmation, setWishlistConfirmation] = useState(false);
 
-  const id = useParams().id;
-
+  const productId = useSelector((item) => item.productInComponent.productId);
+  console.log(productId);
   const navigate = useNavigate();
   useEffect(() => {
     fetchProductData();
   }, []);
 
   const fetchProductData = async () => {
-    await axios.get(`http://localhost:1111/product/${id}`).then((res) => {
-      // console.log(res.data);
-      setProduct(res.data);
-    });
+    await axios
+      .get(`http://localhost:1111/product/${productId}`)
+      .then((res) => {
+        // console.log(res.data);
+        setProduct(res.data);
+      });
   };
-
-  // useEffect(() => {
-  //   console.log(product);
-  // const category = axios
-  //   .get(`http://localhost:1111/category/${product.categoryId}`)
-  //   .then((res) => {
-  //     console.log(res.data);
-  //     setCategory(res.data);
-  //   });
-  // }, [product]);
-
-  // useEffect(() => {
-  //   // Get all sub categories to display
-  //   axios.get(`http://localhost:1111/subCategory`).then((res) => {
-  //     console.log(res.data);
-  //     setSubCategoryToDisplay(
-  //       res.data.filter((e) => e.categoryId === product.categoryId)
-  //     );
-  //   });
-  // }, [category]);
 
   const getCategoryName = async (id) => {
     let categoryName = "";
@@ -72,9 +57,51 @@ const ProductDetails = () => {
 
   const displayImages = () => {};
 
+  const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== "open",
+  })(({ theme, open }) => ({
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+      marginLeft: drawerWidth,
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(["width", "margin"], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
+  }));
+
+  const drawerWidth = 240;
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
   return (
-    <div>
-      <Navbar />
+    <div className="flex flex-col gap-y-20">
+      <Box>
+        <AppBar position="fixed" sx={{ width: "100vw" }} open={open}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{
+                marginRight: 5,
+                ...(open && { display: "none" }),
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Navbar />
+          </Toolbar>
+        </AppBar>
+      </Box>
       <div className="mt-6">
         <div className="px-4" onClick={() => navigate(`/user/${userId}`)}>
           Home{" "}
@@ -92,7 +119,7 @@ const ProductDetails = () => {
             onClick={displayImages}
           >
             <img
-              className="object-fill"
+              className="object-contain"
               src={`data:image/png;base64,${product.image}`}
               alt={`Product: ${product.title}`}
             />

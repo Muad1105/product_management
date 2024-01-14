@@ -75,6 +75,7 @@ productControllers.createProduct = async (request, response) => {
 
 //  Get all products from database
 productControllers.getAllProducts = async (req, res) => {
+  console.log("all products list");
   try {
     const products = await Product.find();
 

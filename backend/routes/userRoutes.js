@@ -9,10 +9,10 @@ import { getAllUsers, getUser } from "../controller/user/getUserController.js";
 
 import deleteUserById from "../controller/user/deleteUserController.js";
 
-import authMiddleware from "../middleware/authMiddleware.js";
 import login from "../controller/user/loginUserController.js";
 import verifyToken from "../controller/user/verifyTokenControler.js";
 import refreshToken from "../controller/user/refreshTokenController.js";
+import logout from "../controller/user/logoutUserController.js";
 
 //Create user
 userRoutes.post("/signup", createUser);
@@ -22,6 +22,8 @@ userRoutes.post("/signup", createUser);
 // userRoutes.post("/signin", userController.createUser);
 
 userRoutes.post("/login", login);
+
+userRoutes.post("/logout", verifyToken, logout);
 
 userRoutes.get("/home", verifyToken, getUser);
 
