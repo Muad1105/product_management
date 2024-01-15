@@ -31,7 +31,7 @@ export const productInComponentSlice = createSlice({
       state.productPosted = true;
     },
     displayCategorySidebarSelection: (state, action) => {
-      console.log("display products sidebar selection");
+      console.log("display products sidebar selection", action.payload);
       state.categorySelected = action.payload;
       localStorage.setItem(
         "displayCategorySelected",

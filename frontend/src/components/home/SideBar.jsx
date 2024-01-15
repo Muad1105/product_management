@@ -187,7 +187,10 @@ const SideBar = () => {
                 >
                   <MailIcon />
                 </ListItemIcon>
-                <ListItemText primary="All" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText
+                  primary="Category"
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
                 {isCollapse ? <ExpandLessIcon /> : <ExpandMoreIcon />}
               </ListItemButton>
             </ListItem>
@@ -195,6 +198,31 @@ const SideBar = () => {
           <Divider />
           <List>
             <Collapse in={isCollapse} timeout="auto" unmountedonexit="true">
+              {/* Show all items in list by removing redux state valu to empty string*/}
+              <ListItem
+                disablePadding
+                sx={{ display: "block" }}
+                onClick={() => handleSidebarItems(" ")}
+              >
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <DevicesOtherIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="All" sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
               {itemCategoriesDropdown.map((text, index) => (
                 <ListItem
                   key={text._id}
