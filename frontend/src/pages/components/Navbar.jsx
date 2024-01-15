@@ -42,8 +42,10 @@ const Navbar = () => {
   return (
     <div className="w-screen text-slate-100 flex justify-between items-center px-10 relative">
       {/* User Name*/}
-      <div></div>
-      <SearchBar />
+      <div>Product Management App</div>
+      <div>
+        <SearchBar />
+      </div>
       <div className="flex items-center justify-center gap-12">
         <div className="cursor-pointer flex gap-2 items-center justify-center relative">
           <div className="flex gap-2">

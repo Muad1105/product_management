@@ -1,6 +1,7 @@
 import _default from "@mui/material/styles/identifier";
 import { createSlice } from "@reduxjs/toolkit";
 
+// Fetch data fropm localStorage
 const productId =
   localStorage.getItem("displayProductId") !== null
     ? JSON.parse(localStorage.getItem("displayProductId"))
@@ -15,6 +16,7 @@ const initialState = {
   productId: productId,
   productPosted: false,
   categorySelected: categoryId,
+  searchProducts: "",
 };
 
 export const productInComponentSlice = createSlice({
@@ -38,6 +40,14 @@ export const productInComponentSlice = createSlice({
         JSON.stringify(state.categorySelected)
       );
     },
+    searchProductItems: (state, action) => {
+      console.log("Search Products Action");
+      state.searchProducts = action.payload;
+      localStorage.setItem(
+        "searchProduct",
+        JSON.stringify(state.searchProducts)
+      );
+    },
   },
 });
 
@@ -45,6 +55,7 @@ export const {
   setSelectedProduct,
   setProductPosted,
   displayCategorySidebarSelection,
+  searchProductItems,
 } = productInComponentSlice.actions;
 
 export default productInComponentSlice.reducer;
