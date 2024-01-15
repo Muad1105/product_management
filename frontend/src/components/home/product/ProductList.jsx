@@ -6,6 +6,9 @@ import { useSelector } from "react-redux";
 
 const ProductList = () => {
   const [allProductsData, setAllProductsData] = useState([]);
+  const [allBrandsData, setAllBrandsData] = useState([]);
+  const [allitemCategoryData, setAllitemCategoryData] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const [filteredProductData, setFilteredProductData] = useState([]);
   const [filteredSearchData, setFilteredSearchData] = useState([]);
@@ -14,38 +17,115 @@ const ProductList = () => {
     (state) => state.productInComponent.categorySelected
   );
 
-  console.log(selectedCategoryId);
-
   const searchProductAphabetData = useSelector(
     (state) => state.productInComponent.searchProducts
   );
-  console.log(searchProductAphabetData);
 
   useEffect(() => {
-    fetchProductData();
+    fetchAllProductData();
+    fetchAllBrands();
+    fetchAllItemCategories();
   }, []);
 
   useEffect(() => {
-    getCategoryProducts();
+    getProductCategory();
   }, [selectedCategoryId]);
 
   useEffect(() => {
-    searchProductsWithAlphabetData();
+    searchProductsWithSerachbarAlphabetData();
   }, [searchProductAphabetData]);
 
-  const searchProductsWithAlphabetData = () => {
-    const searchResult = allProductsData.filter((e, i) => {
-      console.log(searchProductAphabetData, e);
-      return (
-        e.itemCategory.includes(searchProductAphabetData) ||
-        e.brand.includes(searchProductAphabetData)
+  const fetchAllBrands = async () => {
+    console.log("FETCH ALL BRANDS");
+    try {
+      let response = await axios.get("http://localhost:1111/brand/allBrands");
+      let data = await response.data.allBrands;
+
+      // const data = await result.data.allBrands;
+      console.log("fetch all brands.........", data);
+      setAllBrandsData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchAllItemCategories = async () => {
+    try {
+      let response = await axios.get(
+        "http://localhost:1111/itemCategory/allItemCategories"
       );
+      const data = await response.data;
+      console.log("DAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAAAAAAA", data);
+      setAllitemCategoryData(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getBrandIdForAlphabetData = () => {
+    const brandIdData = allBrandsData.filter((e, i) => {
+      console.log(e.name);
+      const regex = new RegExp(searchProductAphabetData, "i");
+      return regex.test(e.name) && regex.test(searchProductAphabetData);
+    });
+    console.log(brandIdData);
+    return brandIdData;
+  };
+
+  const getItemCategoryIdForAlphabetData = () => {
+    const itemCategoryIdData = allitemCategoryData.filter((e, i) => {
+      console.log(e);
+      const regex = new RegExp(searchProductAphabetData, "i");
+      return regex.test(e.name) && regex.test(searchProductAphabetData);
+    });
+    console.log(itemCategoryIdData);
+    return itemCategoryIdData;
+  };
+
+  //filter search bar data
+  const searchProductsWithSerachbarAlphabetData = async () => {
+    console.log("searchProductAphabetData", searchProductAphabetData);
+    //Filter id from brand List
+    const filteredBrandId = getBrandIdForAlphabetData();
+    //Filter id from item category List
+    const filteredItemCategoryId = getItemCategoryIdForAlphabetData();
+
+    console.log("search in", filteredBrandId, filteredItemCategoryId);
+    //filter from all products checking brand, item category and title
+    const searchResult = allProductsData.filter((e, i) => {
+      console.log(
+        "title",
+        e.title,
+        searchProductAphabetData,
+        filteredBrandId.some((brand, i) => {
+          console.log(brand);
+          console.log(brand._id, e.brand, brand._id == e.brand);
+          return brand._id.includes(e.brand);
+        })
+      );
+      console.log(e);
+      return (
+        // item category checking for filteredItemCategoryId includes itemCAtegory All products
+        filteredItemCategoryId.some((ic, i) => {
+          console.log(ic);
+          console.log(ic._id, e.itemCategoty, ic._id == e.itemCategoty);
+          return ic._id.includes(e.itemCategoty);
+        }) ||
+        //  brand checking for filtered brand id included in all products brand
+        filteredBrandId.some((brand, i) => {
+          console.log(brand);
+          console.log(brand._id, e.brand, brand._id == e.brand);
+          return brand._id.includes(e.brand);
+        }) ||
+        e.title.toLowerCase().includes(searchProductAphabetData.toLowerCase())
+      );
+      console.log(searchResult);
     });
     console.log(searchResult);
     setFilteredSearchData(searchResult);
   };
 
-  const getCategoryProducts = () => {
+  const getProductCategory = () => {
     console.log("fetch category data");
     const result = allProductsData.filter((e, i) => {
       console.log(e.itemCategory, selectedCategoryId);
@@ -54,7 +134,7 @@ const ProductList = () => {
     setFilteredProductData(result);
   };
 
-  const fetchProductData = async () => {
+  const fetchAllProductData = async () => {
     setLoading(true);
     await axios.get("http://localhost:1111/product").then((res) => {
       console.log(res);

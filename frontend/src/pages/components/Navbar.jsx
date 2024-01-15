@@ -21,7 +21,6 @@ const Navbar = () => {
   const loggedInUsernameFromReduxStore = useSelector(
     (state) => state.userData.loggedInUsername.name
   );
-  console.log(loggedInUsernameFromReduxStore);
 
   const dispatch = useDispatch();
 

@@ -15,13 +15,11 @@ const SingleProductDisplayHomePageIconSized = ({ item, onClose }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(brandId);
     fetchBrandName();
   }, [brandId]);
 
   const fetchBrandName = async () => {
     const res = await axios.get(`http://localhost:1111/brand/${brandId}`);
-    console.log(res.data.name);
     setBrandName(res.data.name);
   };
 
@@ -40,7 +38,7 @@ const SingleProductDisplayHomePageIconSized = ({ item, onClose }) => {
           src={`data:image/png;base64,${item.image}`}
           alt={`Product Image: ${item.title}`}
           onError={(e) => console.log("Image failed to load:", e)}
-          onLoad={() => console.log("Image loaded successfully")}
+          onLoad={() => ""}
         />
       </div>
       <div className="flex justify-between">
