@@ -23,6 +23,8 @@ import MailIcon from "@mui/icons-material/Mail";
 import Navbar from "../../pages/components/Navbar";
 import { Collapse } from "@mui/material";
 import DevicesOtherIcon from "@mui/icons-material/DevicesOther";
+import { useDispatch } from "react-redux";
+import { displayCategorySidebarSelection } from "../../redux/productReducer";
 
 const SideBar = () => {
   const [itemCategoriesDropdown, setItemCategoriesDropdown] = useState([]);
@@ -38,6 +40,8 @@ const SideBar = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [isCollapse, setIsCollapse] = useState(false);
+
+  const dispatch = useDispatch();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -134,6 +138,10 @@ const SideBar = () => {
     }),
   }));
 
+  const handleSidebarItems = (id) => {
+    dispatch(displayCategorySidebarSelection(id));
+  };
+
   return (
     <div className="flex flex-col gap-y-4">
       <Box sx={{ display: "flex" }}>
@@ -193,6 +201,7 @@ const SideBar = () => {
                   itemID={text._id}
                   disablePadding
                   sx={{ display: "block" }}
+                  onClick={() => handleSidebarItems(text._id)}
                 >
                   <ListItemButton
                     sx={{

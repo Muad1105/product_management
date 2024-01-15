@@ -59,7 +59,7 @@ const Signup = () => {
       return true;
     } else return false;
   };
-  
+
   const handleUserData = async () => {
     console.log(newUser.email);
     try {
@@ -94,8 +94,8 @@ const Signup = () => {
             navigate("/login");
           })
           .catch((err) => console.log(err));
+        return res;
       }
-      return res;
     } catch (err) {
       enqueueSnackbar("Error", {
         variant: "error",

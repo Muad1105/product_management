@@ -1,14 +1,20 @@
 import _default from "@mui/material/styles/identifier";
 import { createSlice } from "@reduxjs/toolkit";
 
-const id =
+const productId =
+  localStorage.getItem("displayProductId") !== null
+    ? JSON.parse(localStorage.getItem("displayProductId"))
+    : "";
+
+const categoryId =
   localStorage.getItem("displayProductId") !== null
     ? JSON.parse(localStorage.getItem("displayProductId"))
     : "";
 
 const initialState = {
-  productId: id,
+  productId: productId,
   productPosted: false,
+  categorySelected: categoryId,
 };
 
 export const productInComponentSlice = createSlice({
@@ -24,10 +30,21 @@ export const productInComponentSlice = createSlice({
       console.log("product added");
       state.productPosted = true;
     },
+    displayCategorySidebarSelection: (state, action) => {
+      console.log("display products sidebar selection");
+      state.categorySelected = action.payload;
+      localStorage.setItem(
+        "displayCategorySelected",
+        JSON.stringify(state.categorySelected)
+      );
+    },
   },
 });
 
-export const { setSelectedProduct, setProductPosted } =
-  productInComponentSlice.actions;
+export const {
+  setSelectedProduct,
+  setProductPosted,
+  displayCategorySidebarSelection,
+} = productInComponentSlice.actions;
 
 export default productInComponentSlice.reducer;
