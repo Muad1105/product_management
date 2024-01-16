@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import productRoutes from "./routes/product/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import path from "path";
 
 import cors from "cors";
 import brandRoutes from "./routes/product/brandRoutes.js";
@@ -25,6 +26,8 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+app.use(express.static(path.join(__dirname, "build"))); // to deploy
 
 //middleware for parsing request body
 app.use(express.json());
