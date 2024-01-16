@@ -12,7 +12,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { userLoggedOut } from "../../redux/userReducer";
+import { userLogOut } from "../../redux/userReducer";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   // Onclick to wishlistbar view
@@ -23,9 +24,11 @@ const Navbar = () => {
   );
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const sendLogoutReq = async () => {
-    const res = await axios.post("http://logout:1111/user/logout", null, {
+    console.log("send logout request");
+    const res = await axios.post("http://localhost:1111/user/logout", null, {
       withCredentials: true,
     });
     if (res.status == 200) {
@@ -35,7 +38,9 @@ const Navbar = () => {
   };
 
   const handleLogout = async () => {
-    sendLogoutReq().then(() => dispatch(userLoggedOut()));
+    sendLogoutReq()
+      .then(() => dispatch(userLogOut()))
+      .then(() => navigate("/"));
   };
 
   return (
@@ -55,7 +60,11 @@ const Navbar = () => {
                 {loggedInUsernameFromReduxStore &&
                   loggedInUsernameFromReduxStore}
               </div>
-              <Button variant="contained" size="small" onClick={handleLogout}>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => handleLogout()}
+              >
                 Logout
               </Button>
             </div>

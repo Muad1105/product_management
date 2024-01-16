@@ -226,7 +226,6 @@ const SideBar = () => {
               {itemCategoriesDropdown.map((text, index) => (
                 <ListItem
                   key={text._id}
-                  itemID={text._id}
                   disablePadding
                   sx={{ display: "block" }}
                   onClick={() => handleSidebarItems(text._id)}

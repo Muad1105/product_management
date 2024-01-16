@@ -13,6 +13,7 @@ const ProductList = () => {
   const [filteredProductData, setFilteredProductData] = useState([]);
   const [filteredSearchData, setFilteredSearchData] = useState([]);
 
+  // category from the sidebar selected
   const selectedCategoryId = useSelector(
     (state) => state.productInComponent.categorySelected
   );
@@ -28,6 +29,7 @@ const ProductList = () => {
   }, []);
 
   useEffect(() => {
+    console.log("selectedCategoryId", selectedCategoryId);
     getProductCategory();
   }, [selectedCategoryId]);
 
@@ -36,7 +38,7 @@ const ProductList = () => {
   }, [searchProductAphabetData]);
 
   const fetchAllBrands = async () => {
-    console.log("FETCH ALL BRANDS");
+    // console.log("FETCH ALL BRANDS");
     try {
       let response = await axios.get("http://localhost:1111/brand/allBrands");
       let data = await response.data.allBrands;
@@ -55,7 +57,7 @@ const ProductList = () => {
         "http://localhost:1111/itemCategory/allItemCategories"
       );
       const data = await response.data;
-      console.log("DAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAAAAAAA", data);
+      console.log("DATA", data);
       setAllitemCategoryData(data);
     } catch (error) {
       console.log(error);
@@ -131,6 +133,7 @@ const ProductList = () => {
       console.log(e.itemCategory, selectedCategoryId);
       return e.itemCategory == selectedCategoryId;
     });
+    console.log("result", result);
     setFilteredProductData(result);
   };
 
