@@ -15,8 +15,6 @@ import session from "express-session";
 
 const app = express();
 
-const PORT = 1111;
-
 // session controller to pass data from one controller to another
 
 app.use(
@@ -49,9 +47,9 @@ app.use("/product", productRoutes);
 app.use("/user", userRoutes);
 
 mongoose
-  .connect(process.env.MONGODB_URL)
+  .connect(process.env.MONGODB_URI)
   .then(() => {
-    app.listen(PORT, () => {
+    app.listen(process.env.PORT, () => {
       console.log(`App is listening to port ${PORT}`);
     });
     console.log("connected to MongoDb Database");
