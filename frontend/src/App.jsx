@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import SignIn from "./pages/Login";
 import Home from "./pages/Home";
@@ -11,6 +11,12 @@ import AddSpecification from "./components/home/product/AddSpecification";
 
 function App() {
   const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    fetch("https://product-management-fx5l.onrender.com")
+      .then((res) => res.json())
+      .then((data) => setMessage(data.message));
+  }, []);
 
   return (
     <Routes>
