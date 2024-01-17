@@ -25,8 +25,6 @@ app.use(
   })
 );
 
-app.use(express.static(path.join(__dirname, "build"))); // to deploy
-
 //middleware for parsing request body
 app.use(express.json());
 
