@@ -30,7 +30,7 @@ app.use(express.json());
 //middleware for processing CORS POLICY
 app.use(
   cors({
-    origin: "http://localhost:5174",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
