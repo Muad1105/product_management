@@ -142,6 +142,7 @@ const Signup = () => {
   useEffect(() => {
     // Validation re enter password
     if (newUser.password === newUser.reEnterPassword) {
+      console.log("passwords match");
       setPasswordsMatch(true);
     } else {
       setPasswordsMatch(false);

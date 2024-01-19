@@ -21,7 +21,6 @@ const Home = () => {
   useEffect(() => {}, []);
 
   const handleResponse = (res) => {
-    console.log(res._id);
     setUser(user.username);
     dispatch(storeLoggedInUsername({ name: res.username, id: res._id }));
   };
@@ -45,11 +44,9 @@ const Home = () => {
 
   //Get user credentials comprising cookie and token
   const sendRequest = async () => {
-    console.log("send request");
     const res = await axios
       .get("http://localhost:1111/user/home", { withCredentials: true })
-      .catch((err) => console.log(err));
-    console.log(res);
+      .catch((err) => "");
     const data = await res.data.user;
 
     return data;

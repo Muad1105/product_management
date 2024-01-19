@@ -29,7 +29,6 @@ const ProductList = () => {
   }, []);
 
   useEffect(() => {
-    console.log("selectedCategoryId", selectedCategoryId);
     getProductCategory();
   }, [selectedCategoryId]);
 
@@ -44,7 +43,6 @@ const ProductList = () => {
       let data = await response.data.allBrands;
 
       // const data = await result.data.allBrands;
-      console.log("fetch all brands.........", data);
       setAllBrandsData(data);
     } catch (error) {
       console.log(error);
@@ -57,7 +55,6 @@ const ProductList = () => {
         "http://localhost:1111/itemCategory/allItemCategories"
       );
       const data = await response.data;
-      console.log("DATA", data);
       setAllitemCategoryData(data);
     } catch (error) {
       console.log(error);
@@ -70,7 +67,6 @@ const ProductList = () => {
       const regex = new RegExp(searchProductAphabetData, "i");
       return regex.test(e.name) && regex.test(searchProductAphabetData);
     });
-    console.log(brandIdData);
     return brandIdData;
   };
 
@@ -80,19 +76,16 @@ const ProductList = () => {
       const regex = new RegExp(searchProductAphabetData, "i");
       return regex.test(e.name) && regex.test(searchProductAphabetData);
     });
-    console.log(itemCategoryIdData);
     return itemCategoryIdData;
   };
 
   //filter search bar data
   const searchProductsWithSerachbarAlphabetData = async () => {
-    console.log("searchProductAphabetData", searchProductAphabetData);
     //Filter id from brand List
     const filteredBrandId = getBrandIdForAlphabetData();
     //Filter id from item category List
     const filteredItemCategoryId = getItemCategoryIdForAlphabetData();
 
-    console.log("search in", filteredBrandId, filteredItemCategoryId);
     //filter from all products checking brand, item category and title
     const searchResult = allProductsData.filter((e, i) => {
       console.log(
@@ -121,27 +114,21 @@ const ProductList = () => {
         }) ||
         e.title.toLowerCase().includes(searchProductAphabetData.toLowerCase())
       );
-      console.log(searchResult);
     });
-    console.log(searchResult);
     setFilteredSearchData(searchResult);
   };
 
   const getProductCategory = () => {
-    console.log("fetch category data");
     const result = allProductsData.filter((e, i) => {
       console.log(e.itemCategory, selectedCategoryId);
       return e.itemCategory == selectedCategoryId;
     });
-    console.log("result", result);
     setFilteredProductData(result);
   };
 
   const fetchAllProductData = async () => {
     setLoading(true);
     await axios.get("http://localhost:1111/product").then((res) => {
-      console.log(res);
-
       setAllProductsData(res.data);
       setLoading(false);
     });

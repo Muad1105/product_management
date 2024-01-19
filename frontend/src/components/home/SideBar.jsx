@@ -61,15 +61,10 @@ const SideBar = () => {
       const res = await axios.get(
         "http://localhost:1111/itemCategory/allItemCategories"
       );
-      console.log(res.data);
       setItemCategoriesDropdown(res.data);
     };
     getItemCategories();
   }, []);
-
-  useEffect(() => {
-    console.log(showCategoryDropdown, "allProducts", itemCategoriesDropdown);
-  }, [showCategoryDropdown, itemCategoriesDropdown]);
 
   const drawerWidth = 240;
 

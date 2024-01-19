@@ -6,6 +6,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import LogoutUserCheck from "./components/LogoutUserCheck";
 
 const Login = () => {
   // Save input user name and password to login
@@ -16,7 +17,30 @@ const Login = () => {
   // Logged in user state
   const [passwordView, setPasswordView] = useState(false);
 
+  const [userNotFound, setUserNotFound] = useState(false);
+
+  const [userCredentialsFalse, setUserCredentialsFalse] = useState(false);
+
+  const [logoutCheck, setLogoutCheck] = useState(false);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleBack = (event) => {
+      event.preventDefault();
+      setLogoutCheck(true);
+    };
+    console.log("popstate");
+
+    window.addEventListener("popstate", handleBack);
+    return () => {
+      window.removeEventListener("popstate", handleBack);
+    };
+  }, [navigate]);
+
+  useEffect(() => {
+    console.log("log out check");
+  }, [logoutCheck]);
 
   // Handle login function on submit button click
   const handleLogin = async () => {
@@ -24,22 +48,59 @@ const Login = () => {
     try {
       const userData = enteredUserDetails;
       //Get the details to check for the user credetials availability
-      await axios
-        .post("http://localhost:1111/user/login", userData)
-        .then((response) => {
-          console.log(response);
-          const user = response.data;
-          console.log(user);
-          navigate(`/user/home`);
-        });
+
+      const response = await axios.post(
+        "http://localhost:1111/user/login",
+        userData
+      );
+
+      console.log("res data");
+
+      const user = response.data;
+      navigate(`/user/home`);
     } catch (error) {
-      console.log(error);
+      console.log("error");
+      console.log(error.response);
+      if (error.response.status === 404) {
+        setUserNotFound(true);
+      }
+      if (error.response.status === 401) {
+        setUserCredentialsFalse(true);
+      }
     }
+  };
+
+  const handleEmailChange = (email) => {
+    setEnteredUserDetails({
+      ...enteredUserDetails,
+      email,
+    });
+    setUserNotFound(false);
+  };
+
+  const handlePasswordChange = (password) => {
+    setEnteredUserDetails({
+      ...enteredUserDetails,
+      password,
+    });
+    setUserCredentialsFalse(false);
+    setUserCredentialsFalse(false);
   };
 
   return (
     <div className="top-2 bg-slate w-full h-screen flex justify-center items-center">
       <div className="flex flex-col items-center text-2xl text-gray-700 justify-center w-[70%] h-screen">
+        {userNotFound && (
+          <div className="text-md text-red-700 border-2 border-red-700 px-6 py-1 bg-yellow-500 rounded-md">
+            User Not Found, Please Try Again
+          </div>
+        )}
+        {userCredentialsFalse && (
+          <div className="text-md text-red-700 border-2 border-red-700 px-6 py-1 bg-yellow-500 rounded-md">
+            Email/Password Incorrect
+          </div>
+        )}
+
         <div className="flex flex-col p-4 w-[500px] rounded-xl gap-y-4">
           <h1 className="mx-auto text-2xl font-bold text-yellow-400">
             Sign In to Your Account
@@ -51,12 +112,7 @@ const Login = () => {
               name="email"
               type="text"
               className="border-2 focus:border-gray-600 text-[13px] py-2 rounded-md w-[480px] px-8"
-              onChange={(e) =>
-                setEnteredUserDetails({
-                  ...enteredUserDetails,
-                  email: e.target.value,
-                })
-              }
+              onChange={(e) => handleEmailChange(e.target.value)}
             />
           </div>
           <div className="relative">
@@ -66,12 +122,7 @@ const Login = () => {
               name="password"
               type={passwordView ? "text" : "password"}
               className="border-2 focus:border-gray-600 text-[13px] py-2 rounded-md w-[480px] px-8"
-              onChange={(e) =>
-                setEnteredUserDetails({
-                  ...enteredUserDetails,
-                  password: e.target.value,
-                })
-              }
+              onChange={(e) => handlePasswordChange(e.target.value)}
             />
             <div
               className="absolute top-1 right-0 hover:cursor-pointer"
@@ -80,6 +131,7 @@ const Login = () => {
               {passwordView ? <VisibilityIcon /> : <VisibilityOffIcon />}
             </div>
           </div>
+
           <div className="flex flex-col justify-center items-center gap-x-4 text-[17px] m-4 ">
             <Link to="/forgot_password">
               <div className="text-xl font-[bold] text-slate-900 underline cursor-pointer">

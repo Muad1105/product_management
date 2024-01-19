@@ -30,7 +30,7 @@ app.use(express.json());
 //middleware for processing CORS POLICY
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5174",
     credentials: true,
   })
 );
@@ -46,7 +46,7 @@ app.use("/user", userRoutes);
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
-    const PORT = process.env.PORT || 8000;
+    const PORT = 1111;
     app.listen(PORT, () => {
       console.log(`App is listening to port ${PORT}`);
     });

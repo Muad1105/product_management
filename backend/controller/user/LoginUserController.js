@@ -9,11 +9,10 @@ const login = async (req, res, next) => {
 
   //   check if the user exists
   let existingUser;
-  try {
-    existingUser = await User.findOne({ email });
-  } catch (err) {
-    return new Error(err);
-  }
+
+  existingUser = await User.findOne({ email });
+
+  console.log("existing user");
 
   if (!existingUser) {
     return res.status(404).json({ message: "User not found, signup please" });
@@ -21,7 +20,7 @@ const login = async (req, res, next) => {
 
   const passwordIsCorrect = bcrypt.compareSync(password, existingUser.password);
   if (!passwordIsCorrect) {
-    return res.status(400).json({ message: "Invalid Email / Password" });
+    return res.status(401).json({ message: "Invalid Email / Password" });
   }
   console.log("password Correct");
 
