@@ -27,7 +27,7 @@ const editUserById = async (request, response) => {
       email: request.body.email,
     };
     const user = await User.findByIdAndUpdate(id, newUser);
-    return response.status(201).send(user);
+    return response.status(200).send(user);
   } catch (error) {
     console.log(error);
   }

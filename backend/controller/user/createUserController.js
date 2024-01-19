@@ -22,7 +22,7 @@ const createUser = async (request, response) => {
     if (existingUser) {
       console.log("user exists");
       return response
-        .status(400)
+        .status(409)
         .json({ message: "User already exists, Please login" });
     }
     console.log("body");

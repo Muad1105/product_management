@@ -28,15 +28,14 @@ const Login = () => {
         .post("http://localhost:1111/user/login", userData)
         .then((response) => {
           console.log(response);
-          const users = response.data;
-          console.log(users);
+          const user = response.data;
+          console.log(user);
           navigate(`/user/home`);
         });
     } catch (error) {
       console.log(error);
     }
   };
-
 
   return (
     <div className="top-2 bg-slate w-full h-screen flex justify-center items-center">
