@@ -13,6 +13,8 @@ User can register, login and create categories, sub categories and products
 
 List the technologies or tools that you used in your project.
 
+Ensure no other vite projects is running in in your pc. Else change the line backend/index.js line 35 cors origin: "Frontend URL being Run"
+
 ## Features
 
 Register user
