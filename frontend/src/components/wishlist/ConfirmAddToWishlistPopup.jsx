@@ -2,13 +2,36 @@ import React from "react";
 import Button from "@mui/material/Button";
 import { useDispatch } from "react-redux";
 import { saveToWishlist } from "../../redux/wishlistReducer";
+import { storeLoggedInUser } from "../../redux/userReducer";
+import { useSelector } from "react-redux";
 
-const AddToWishlistPopup = ({ id, onClose }) => {
+import axios from "axios";
+
+const AddToWishlistPopup = ({ productId, onClose }) => {
   const dispatch = useDispatch();
 
-  const addToWishlist = () => {
-    
-    dispatch(saveToWishlist(id));
+  const userId = useSelector((state) => state.userData.loggedInUser.id);
+
+  console.log(userId);
+
+  const addToWishlist = async () => {
+    console.log("wishlist post");
+    //UserId from redux store and Product Id
+    const data = {
+      productId,
+      userId,
+    };
+
+    await axios
+      .post("http://localhost:1111/user/wishlist", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      });
+    // dispatch(saveToWishlist(id));
     onClose();
   };
   return (
