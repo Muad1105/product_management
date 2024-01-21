@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "./components/Navbar.jsx";
+import Navbar from "../components/Navbar.jsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Button from "@mui/material/Button";
 import { useParams } from "react-router-dom";
@@ -36,26 +36,6 @@ const ProductDetails = () => {
         setProduct(res.data);
       });
   };
-
-  const getCategoryName = async (id) => {
-    let categoryName = "";
-    await axios.get(`http://localhost:1111/category/${id}`).then((res) => {
-      console.log(res.data.name);
-      categoryName = res.data.name;
-    });
-    return categoryName;
-  };
-
-  const getSubCategoryName = async (id) => {
-    let subCategoryName = "";
-    axios.get(`http://localhost:1111/subCategory/${id}`).then((res) => {
-      console.log(res.data.name);
-      subCategoryName = res.data.name;
-    });
-    return subCategoryName;
-  };
-
-  const displayImages = () => {};
 
   const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== "open",
@@ -116,7 +96,7 @@ const ProductDetails = () => {
         <div className="m-8 flex justify-around">
           <div
             className="w-[400px] h-[400px] border-2 border-slate-400 mr-8 flex cursor-pointer"
-            onClick={displayImages}
+            onClick={""}
           >
             <img
               className="object-contain"
@@ -201,7 +181,7 @@ const ProductDetails = () => {
       )}
       {wishlistConfirmation && (
         <AddToWishlistPopup
-          id={id}
+          productId={productId}
           onClose={() => setWishlistConfirmation(false)}
         />
       )}
