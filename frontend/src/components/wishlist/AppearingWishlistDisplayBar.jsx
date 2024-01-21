@@ -3,11 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 import SingleProductIconSized from "../home/product/SingleProductDisplayHomePageIconSized";
 import axios from "axios";
 import Loading from "../Loading";
+import { storeLoggedInUser } from "../../redux/userReducer";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const AppearingWishlistDisplayBar = ({ onClose }) => {
-  // Get wishlist ID data stored in redux store
-  const [availableWishlistProductsId, setAvailableWishlistProductsId] =
-    useState([]);
+  // Get wishlist ID data
+  const [wishlist, setWishlist] = useState([]);
   // fetch the wishlist ID products from api
   const [availableWishlistProducts, setAvailableWishlistProducts] = useState(
     []
@@ -15,32 +16,38 @@ const AppearingWishlistDisplayBar = ({ onClose }) => {
 
   const [loading, setLoading] = useState(false);
 
-  const userWishlistData = useSelector((state) => state.wishlist.value);
-
-  console.log(userWishlistData);
+  useEffect(() => {
+    fetchWishlist();
+  }, []);
 
   useEffect(() => {
-    setAvailableWishlistProductsId(userWishlistData);
-  }, [userWishlistData]);
+    wishlist[0] && getWishlistProducts();
+  }, [wishlist]);
 
-  const dispatch = useDispatch();
+  const userId = useSelector((state) => state.userData.loggedInUser.id);
 
-  useEffect(() => {
-    fetchProducts();
-  }, [availableWishlistProductsId]);
+  console.log(userId);
 
   // fetch produts for the wishlist IDs
-  const fetchProducts = async () => {
+  const fetchWishlist = async () => {
     setLoading(true);
-    await axios.get("http://localhost:1111/product").then((res) => {
-      availableWishlistProductsId[0] &&
-        setAvailableWishlistProducts(
-          res.data.filter((item) => {
-            console.log(availableWishlistProductsId);
-            // console.log(item);
-            return availableWishlistProductsId.includes(item.id);
-          })
-        );
+    await axios.get(`http://localhost:1111/user/${userId}`).then((res) => {
+      console.log("response", res.data.user);
+      const wishlistData = res.data.user.wishlist;
+      setWishlist(wishlistData);
+      setLoading(false);
+    });
+  };
+
+  const getWishlistProducts = async () => {
+    setLoading(true);
+    await axios.get(`http://localhost:1111/product`).then((res) => {
+      console.log(res.data);
+      const productData = res.data.filter((item, index) => {
+        console.log("wishlist", wishlist, "item.id", item.id);
+        return wishlist.includes(item.id);
+      });
+      setAvailableWishlistProducts(productData);
       setLoading(false);
     });
   };
@@ -74,7 +81,17 @@ const AppearingWishlistDisplayBar = ({ onClose }) => {
             </div>
             {availableWishlistProducts[0] ? (
               availableWishlistProducts.map((item) => (
-                <SingleProductIconSized item={item} onClose={handleOnclick} />
+                <div className="relative">
+                  <div style={{ pointerEvents: "none" }}>
+                    <SingleProductIconSized item={item} />
+                  </div>
+                  <div className="absolute bottom-10 right-12 hover:cursor-pointer">
+                    <DeleteIcon
+                      style={{ color: "red", fontSize: "30px" }}
+                      onClick={()=>removeWishlistItem}
+                    />
+                  </div>
+                </div>
               ))
             ) : (
               <div>No Products</div>
