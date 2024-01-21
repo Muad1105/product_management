@@ -5,7 +5,10 @@ const userRoutes = express.Router();
 import createUser from "../controller/user/createUserController.js";
 import editUserById from "../controller/user/editUserController.js";
 
-import { getAllUsers, getUser } from "../controller/user/getUserController.js";
+import {
+  getAllUsers,
+  getUserById,
+} from "../controller/user/getUserController.js";
 
 import deleteUserById from "../controller/user/deleteUserController.js";
 
@@ -13,6 +16,7 @@ import login from "../controller/user/loginUserController.js";
 import verifyToken from "../controller/user/verifyTokenControler.js";
 import refreshToken from "../controller/user/refreshTokenController.js";
 import logout from "../controller/user/logoutUserController.js";
+import { sendOtp } from "../controller/user/sendOtpController.js";
 
 //Create user
 userRoutes.post("/signup", createUser);
@@ -25,17 +29,17 @@ userRoutes.post("/login", login);
 
 userRoutes.post("/logout", verifyToken, logout);
 
-userRoutes.get("/home", verifyToken, getUser);
+userRoutes.get("/home", verifyToken, getUserById);
 
 //refresh token
-userRoutes.get("/refresh", refreshToken, verifyToken, getUser);
+userRoutes.get("/refresh", refreshToken, verifyToken, getUserById);
 
 //Get all users
 userRoutes.get("/all-users", getAllUsers);
 
 //Get User by ID
 
-userRoutes.get("/:id", getUser);
+userRoutes.get("/:id", getUserById);
 
 //  Edit User by ID
 
@@ -43,5 +47,8 @@ userRoutes.put("/:id", editUserById);
 
 // Delete User by ID
 userRoutes.delete("/:id", deleteUserById);
+
+//Send OTP
+userRoutes.post("/send-otp", sendOtp);
 
 export default userRoutes;
