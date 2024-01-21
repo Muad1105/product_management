@@ -17,6 +17,7 @@ import verifyToken from "../controller/user/verifyTokenControler.js";
 import refreshToken from "../controller/user/refreshTokenController.js";
 import logout from "../controller/user/logoutUserController.js";
 import { sendOtp } from "../controller/user/sendOtpController.js";
+import { addWishlistItem } from "../controller/user/wishlist/addWishlistController.js";
 
 //Create user
 userRoutes.post("/signup", createUser);
@@ -50,5 +51,8 @@ userRoutes.delete("/:id", deleteUserById);
 
 //Send OTP
 userRoutes.post("/send-otp", sendOtp);
+
+//User wishlist
+userRoutes.post("/wishlist", addWishlistItem);
 
 export default userRoutes;
