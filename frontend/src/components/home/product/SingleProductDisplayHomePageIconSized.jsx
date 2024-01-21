@@ -29,9 +29,9 @@ const SingleProductDisplayHomePageIconSized = ({ item, onClose }) => {
   };
 
   return (
-    <div className="mb-4 border-2 border-slate-400 w-[200px] rounded-md flex flex-col p-2">
+    <div className="mb-4 border-2 border-slate-400 w-[200px] rounded-md flex flex-col p-2 bg-orange-300 transition-all hover:scale-110">
       <div
-        className="h-[100px] border-2 border-slate-400 flex justify-center cursor-pointer"
+        className="h-[100px] border-2 border-slate-400 flex justify-center cursor-pointer bg-slate-100"
         onClick={handleClick}
       >
         <img
