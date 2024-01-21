@@ -15,9 +15,9 @@ export const getAllUsers = async (request, response) => {
 
 // Get user by ID
 
-export const getUser = async (request, response) => {
+export const getUserById = async (request, response) => {
   // console.log(request);
-  const userId = request.id;
+  const userId = request.id || request.params.id;
   console.log("userID", userId);
   let user;
   try {
