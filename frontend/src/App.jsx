@@ -5,9 +5,10 @@ import Home from "./pages/Home";
 import ProductDetails from "./pages/ProductDetails";
 import AddProduct from "./components/home/components/AddProduct";
 import AddConfiguration from "./components/home/product/AddConfiguration";
-import ForgotPassword from "./pages/ForgotPassword";
 import Signup from "./pages/Signup";
 import AddSpecification from "./components/home/product/AddSpecification";
+import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
+import EnterPassword from "./pages/forgotPassword/EnterPassword";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -23,6 +24,7 @@ function App() {
       <Route path="/user/:id/add_category" element={<AddSpecification />} />
       <Route path="/user/:id/add_subcategory" element={<AddConfiguration />} />
       <Route path="/forgot_password" element={<ForgotPassword />} />
+      <Route path="enter_password" element={<EnterPassword />} />
     </Routes>
   );
 }

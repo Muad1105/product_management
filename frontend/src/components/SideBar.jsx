@@ -20,11 +20,11 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MailIcon from "@mui/icons-material/Mail";
-import Navbar from "../../pages/components/Navbar";
+import Navbar from "./Navbar";
 import { Collapse } from "@mui/material";
 import DevicesOtherIcon from "@mui/icons-material/DevicesOther";
 import { useDispatch } from "react-redux";
-import { displayCategorySidebarSelection } from "../../redux/productReducer";
+import { displayCategorySidebarSelection } from "../redux/productReducer";
 
 const SideBar = () => {
   const [itemCategoriesDropdown, setItemCategoriesDropdown] = useState([]);

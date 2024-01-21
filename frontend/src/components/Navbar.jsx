@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Pagination from "@mui/material/Pagination";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import WishlistDisplayBar from "../../components/wishlist/AppearingWishlistDisplayBar";
-import SearchBar from "../../components/SearchBar";
+import WishlistDisplayBar from "./wishlist/AppearingWishlistDisplayBar";
+import SearchBar from "./SearchBar";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
@@ -12,7 +12,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { userLogOut } from "../../redux/userReducer";
+import { userLogOut } from "../redux/userReducer";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
