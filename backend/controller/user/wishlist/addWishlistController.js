@@ -11,9 +11,9 @@ export const addWishlistItem = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: "User Not Found." });
     }
-
     //check if the item already preesent
-    const itemPresent = user.wishlist.includes(productId);
+    console.log("user checked", user);
+    const itemPresent = user.wishlist && user.wishlist.includes(productId);
     if (itemPresent) {
       return res.status(409).json({ message: "Conflict, item present." });
     }
