@@ -1,33 +1,34 @@
 import { User } from "../../model/user/userModel.js";
+import bcrypt from "bcrypt";
 
-// Edit user by ID
+import { generateToken } from "../../middleware/authUtils.js";
+
+const saltRounds = 10; // Number of salt rounds for bcrypt
+
+//Create user
 
 const editUserById = async (request, response) => {
-  const id = request.params.id;
+  console.log("signup request.body", request.body);
   try {
-    if (!request.body.name || !request.body.password || !request.body.email) {
-      return response
-        .status(400)
-        .send("Send all required fields: Name, Password, email");
-    }
+    const id = request.params.id;
+    const { email, username, password, wishlist } = request.body;
 
-    // Extract the user ID from the JWT payload
-    const loggedInUserId = request.user.id;
+    console.log(username, password, email);
 
-    // Check if the logged-in user is authorized to edit this user
-    if (id !== loggedInUserId) {
-      return response.status(403).json({
-        message: "Forbidden: You are not authorized to edit this user",
-      });
-    }
+    console.log("hash pass");
+    //Hash the password
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const newUser = {
-      name: request.body.name,
-      password: request.body.password,
-      email: request.body.email,
+      username: username,
+      password: hashedPassword,
+      email: email,
     };
-    const user = await User.findByIdAndUpdate(id, newUser);
-    return response.status(200).send(user);
+
+    console.log(newUser);
+
+    const addedUser = await User.findByIdAndUpdate(id, newUser);
+    return response.status(201).json({ message: addedUser });
   } catch (error) {
     console.log(error);
   }
