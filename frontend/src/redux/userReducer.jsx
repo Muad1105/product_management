@@ -6,16 +6,19 @@ const user =
     : "";
 
 const initialState = {
-  loggedInUsername: user,
+  loggedInUser: user,
 };
 
 export const userSlice = createSlice({
   name: "userStore",
   initialState,
   reducers: {
-    storeLoggedInUsername: (state, action) => {
-      state.loggedInUsername = action.payload;
-      localStorage.setItem("userData", JSON.stringify(state.loggedInUsername));
+    storeLoggedInUser: (state, action) => {
+      //set an object with keys name and id user details
+      console.log("user data", action.payload);
+      state.loggedInUser = { id: action.payload.id, name: action.payload.name };
+
+      localStorage.setItem("userData", JSON.stringify(state.loggedInUser));
     },
     userLogOut: (state, action) => {
       localStorage.removeItem("userData");
@@ -23,6 +26,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { storeLoggedInUsername, userLogOut } = userSlice.actions;
+export const { storeLoggedInUser, userLogOut } = userSlice.actions;
 
 export default userSlice.reducer;

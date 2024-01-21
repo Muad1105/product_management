@@ -4,8 +4,8 @@ import SideBar from "../components/home/SideBar";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ProductsDisplaySection from "../components/home/product/ProductsDisplaySection";
 import { useDispatch } from "react-redux";
-import { storeLoggedInUsername } from "../redux/userReducer";
-import { useParams } from "react-router-dom";
+import { storeLoggedInUser } from "../redux/userReducer";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 // set when using with withCredentials with axios call
@@ -18,11 +18,26 @@ const Home = () => {
 
   const userId = useParams().id;
 
-  useEffect(() => {}, []);
+  const navigate = useNavigate();
 
-  const handleResponse = (res) => {
+  useEffect(() => {
+    const handleBack = (event) => {
+      event.preventDefault();
+      navigate("/user/home");
+    };
+    console.log("popstate");
+
+    window.addEventListener("popstate", handleBack);
+    return () => {
+      window.removeEventListener("popstate", handleBack);
+    };
+  }, [navigate]);
+
+  const handleResponse = (user) => {
+    console.log(user);
+    const userData = { name: user.username, id: user._id };
     setUser(user.username);
-    dispatch(storeLoggedInUsername({ name: res.username, id: res._id }));
+    dispatch(storeLoggedInUser(userData));
   };
 
   let firstRender = true;
@@ -48,6 +63,7 @@ const Home = () => {
       .get("http://localhost:1111/user/home", { withCredentials: true })
       .catch((err) => "");
     const data = await res.data.user;
+    console.log("data", res.data.user);
 
     return data;
   };

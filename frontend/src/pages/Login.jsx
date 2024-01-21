@@ -25,23 +25,6 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const handleBack = (event) => {
-      event.preventDefault();
-      setLogoutCheck(true);
-    };
-    console.log("popstate");
-
-    window.addEventListener("popstate", handleBack);
-    return () => {
-      window.removeEventListener("popstate", handleBack);
-    };
-  }, [navigate]);
-
-  useEffect(() => {
-    console.log("log out check");
-  }, [logoutCheck]);
-
   // Handle login function on submit button click
   const handleLogin = async () => {
     console.log("handleLogin");
@@ -60,7 +43,7 @@ const Login = () => {
       navigate(`/user/home`);
     } catch (error) {
       console.log("error");
-      console.log(error.response);
+      console.log(error);
       if (error.response.status === 404) {
         setUserNotFound(true);
       }

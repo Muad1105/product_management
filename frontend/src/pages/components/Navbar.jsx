@@ -20,8 +20,9 @@ const Navbar = () => {
   const [showWishlistBar, setShowWishlistBar] = useState(false);
 
   const loggedInUsernameFromReduxStore = useSelector(
-    (state) => state.userData.loggedInUsername.name
+    (state) => state.userData.loggedInUser.name
   );
+  console.log(loggedInUsernameFromReduxStore);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
