@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "./components/Navbar";
-import SideBar from "../components/home/SideBar";
+import SideBar from "../components/SideBar";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ProductsDisplaySection from "../components/home/product/ProductsDisplaySection";
 import { useDispatch } from "react-redux";

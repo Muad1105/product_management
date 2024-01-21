@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import { useParams } from "react-router-dom";
-import AddSpecification from "./AddSpecification";
-import AddSubCategory from "./AddConfiguration";
+import AddSpecification from "./create/AddSpecification";
+import AddSubCategory from "./create/AddConfiguration";
 import AddProduct from "../components/AddProduct";
 import ProductList from "./ProductList";
-import AddItemCategory from "./AddItemCategory";
-import AddBrand from "./AddBrand";
+import AddItemCategory from "./create/AddItemCategory";
+import AddBrand from "./create/AddBrand";
 
 const ProductsDisplaySection = () => {
   const [showBrandModel, setShowBrandModel] = useState(false);
