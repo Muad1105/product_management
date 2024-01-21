@@ -12,7 +12,7 @@ const deleteUserById = async (request, response) => {
 
     const result = await User.findByIdAndDelete(id);
     if (result)
-      return response.status(204).send({ message: "User Deleted Succesfully" });
+      return response.status(204).json({ message: "User Deleted Succesfully" });
   } catch (error) {
     console.log(error);
     response.status(500).send({ message: error.message });
