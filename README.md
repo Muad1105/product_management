@@ -4,10 +4,10 @@
 - [Description](#User can register, login and create categories, sub categories and products)
 - [Backend Libraries Used](#express #mongoose #dotenv #cors )
 - [Frontend Libraries Used](#react #mui #axios #tailwind )
-- [Features](#Register-User #Login-User #Add-Product #Add-Brand #Add-Configuration #Add-Specification #Add-Item-Category)
+- [Features](#Register-User #Login-User #Logout-user #Add-Product #Add-Brand #Add-Configuration #Add-Specification #Add-Item-Category)
 
 ## Description
-# User registration, login and create Item category(As what kind of products), brand, specification, configuration and product. Display created Products, Add to wishlist.
+# User registration, login, logout and create Item category(As what kind of products), brand, specification, configuration and product. Display created Products, Add to wishlist.
 
 ## Technologies Used
 # Frontend -ReactJs, react-router-dom, redux-toolkit, MUI, axios.
@@ -24,9 +24,10 @@
 # Sign in and view list of products user home page.
 # OnClick products => product details page => Add to wishlist.
 # Wishlist Bar Appearing from screen right end.
+# Logout
 
 ## Getting Started
-cd backend run npm install and npm start, cd frontend run npm install and npm run dev
+# cd /backend run npm install and npm start, cd /frontend run npm install and npm run dev
 
 ## Recommendation
 # Ensure no other vite projects is running in in your pc. Else change the line backend/index.js line 35 cors origin: "Frontend URL being Run"
@@ -35,6 +36,8 @@ cd backend run npm install and npm start, cd frontend run npm install and npm ru
 # Initial page displayed will be user login with register option
 # Register and login with user credentials
 
+## Bugs
+#
 
 ## Ownership
 # -Muad-
