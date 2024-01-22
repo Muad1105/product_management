@@ -29,11 +29,11 @@ const SingleProductDisplayHomePageIconSized = ({ item, onClose }) => {
   };
 
   return (
-    <div className="mb-4 border-2 border-slate-400 w-[200px] rounded-md flex flex-col p-2 bg-orange-300 transition-all hover:scale-110">
-      <div
-        className="h-[100px] border-2 border-slate-400 flex justify-center cursor-pointer bg-slate-100"
-        onClick={handleClick}
-      >
+    <div
+      className="mb-4 border-2 border-slate-400 w-[200px] rounded-md flex flex-col p-2 bg-orange-300 transition-all cursor-pointer hover:scale-110"
+      onClick={handleClick}
+    >
+      <div className="h-[100px] border-2 border-slate-400 flex justify-center bg-slate-100">
         <img
           src={`data:image/png;base64,${item.image}`}
           alt={`Product Image: ${item.title}`}
@@ -49,12 +49,6 @@ const SingleProductDisplayHomePageIconSized = ({ item, onClose }) => {
         </div>
         <div className="flex flex-col justify-center">
           <div></div>
-          <div
-            className="text-slate-700 rounded-full bg-slate-300 p-1 cursor-pointer"
-            onClick={() => setWishlistConfirmation(true)}
-          >
-            <FavoriteBorderIcon />
-          </div>
         </div>
       </div>
       {wishlistConfirmation && (
