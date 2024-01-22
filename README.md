@@ -7,7 +7,7 @@
 - [Features](#Register-User #Login-User #Add-Product #Add-Brand #Add-Configuration #Add-Specification #Add-Item-Category)
 
 ## Description
-# User can register, login and create Item category(As what kind of products), brand, specification, configuration and product.
+# User registration, login and create Item category(As what kind of products), brand, specification, configuration and product. Display created Products, Add to wishlist.
 
 ## Technologies Used
 # Frontend -ReactJs, react-router-dom, redux-toolkit, MUI, axios.
