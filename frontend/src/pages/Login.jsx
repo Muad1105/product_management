@@ -71,7 +71,7 @@ const Login = () => {
   };
 
   return (
-    <div className="top-2 bg-slate w-full h-screen flex justify-center items-center">
+    <div className="top-2 bg-slate w-full h-screen flex">
       <div className="flex flex-col items-center text-2xl text-gray-700 justify-center w-[70%] h-screen">
         {userNotFound && (
           <div className="text-md text-red-700 border-2 border-red-700 px-6 py-1 bg-yellow-500 rounded-md">
@@ -84,17 +84,15 @@ const Login = () => {
           </div>
         )}
 
-        <div className="flex flex-col p-4 w-[500px] rounded-xl gap-y-4">
-          <h1 className="mx-auto text-2xl font-bold text-yellow-400">
-            Sign In to Your Account
-          </h1>
+        <div className="flex flex-col p-4 rounded-xl gap-y-4 justify-center items-cnter">
+          <h1 className="mx-auto text-2xl font-bold text-yellow-400">Login</h1>
           <div className="relative">
             <EmailOutlinedIcon className="absolute text-slate-400 top-4 left-1" />
             <input
               placeholder="email"
               name="email"
               type="text"
-              className="border-2 focus:border-gray-600 text-[13px] py-2 rounded-md w-[480px] px-8"
+              className="border-2 focus:border-gray-600 text-[13px] py-2 rounded-md w-[280px] px-8"
               onChange={(e) => handleEmailChange(e.target.value)}
             />
           </div>
@@ -104,7 +102,7 @@ const Login = () => {
               placeholder="password"
               name="password"
               type={passwordView ? "text" : "password"}
-              className="border-2 focus:border-gray-600 text-[13px] py-2 rounded-md w-[480px] px-8"
+              className="border-2 focus:border-gray-600 text-[13px] py-2 rounded-md w-[280px] px-8"
               onChange={(e) => handlePasswordChange(e.target.value)}
             />
             <div
@@ -122,8 +120,13 @@ const Login = () => {
               </div>
             </Link>
           </div>
-          <Button variant="contained" size="medium" onClick={handleLogin}>
-            Sign In
+          <Button
+            variant="contained"
+            size="small"
+            onClick={handleLogin}
+            style={{ width: "150px", marginLeft: "auto", marginRight: "auto" }}
+          >
+            Login
           </Button>
         </div>
       </div>
