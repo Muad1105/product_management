@@ -19,10 +19,9 @@ const Signup = () => {
     reEnterPassword: "",
     email: "",
   });
-  const [validNewUser, setValidNewUser] = useState({
+  const [validUser, setValidUser] = useState({
     validUsername: false,
     validPassword: false,
-    validReEnterPassword: false,
   });
 
   const [passwordView, setPasswordView] = useState(false);
@@ -33,6 +32,8 @@ const Signup = () => {
 
   const [error, setError] = useState(false);
 
+  const [signInButtonTriggered, setSignInButtonTriggered] = useState(false);
+
   const navigate = useNavigate();
 
   const nameRegEx = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,}/;
@@ -42,17 +43,43 @@ const Signup = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const validateUserInputs = () => {
-    console.log(
-      "value",
-      validEmail,
-      validNewUser.validUsername,
-      validNewUser.validPassword,
-      passwordsMatch
-    );
+    // validation user name
+    const usernameValid = nameRegEx.test(newUser.username);
+    console.log(usernameValid);
+    setValidUser((prev) => ({
+      ...prev,
+      validUsername: usernameValid,
+    }));
+
+    // Validation for password
+    console.log(newUser.password);
+    const passwordValid = passwordRegex.test(newUser.password);
+    console.log("passwordValid", passwordValid);
+    setValidUser((prev) => ({
+      ...prev,
+      validPassword: passwordValid,
+    }));
+
+    // Validation re enter password
+    if (newUser.password === newUser.reEnterPassword) {
+      console.log("passwords match");
+      setPasswordsMatch(true);
+    } else {
+      setPasswordsMatch(false);
+    }
+    //  validation email
+    const validEmailformat = validator.isEmail(newUser.email);
+
+    // Check if email is valid and has no uppercase letters
+    if (validEmailformat) {
+      setValidEmail(true);
+    } else {
+      setValidEmail(false);
+    }
     if (
       validEmail &&
-      validNewUser.validUsername &&
-      validNewUser.validPassword &&
+      validUser.validUsername &&
+      validUser.validPassword &&
       passwordsMatch
     ) {
       console.log("Value");
@@ -61,6 +88,7 @@ const Signup = () => {
   };
 
   const handleUserData = async () => {
+    setSignInButtonTriggered(true);
     console.log(newUser.email);
     try {
       console.log(
@@ -79,6 +107,7 @@ const Signup = () => {
         setError(true);
         return;
       } else {
+        console.log("else");
         const userData = {
           username: newUser.username,
           password: newUser.password,
@@ -104,117 +133,101 @@ const Signup = () => {
     }
   };
 
-  const handleUsername = (item) => {
-    console.log();
-    setNewUser((prev) => ({ ...prev, username: item }));
-  };
-
-  useEffect(() => {
-    // validation user name
-    const usernameValid = nameRegEx.test(newUser.username);
-    console.log(usernameValid);
-    setValidNewUser((prev) => ({
+  const handleUsernameChange = (username) => {
+    setSignInButtonTriggered(false);
+    setValidUser((prev) => ({ ...prev, validUsername: false }));
+    setNewUser((prev) => ({
       ...prev,
-      validUsername: usernameValid,
+      username,
     }));
-  }, [newUser.username]);
-
-  const handleEnteredPassword = (item) => {
-    setNewUser((prev) => ({ ...prev, password: item }));
   };
 
-  useEffect(() => {
-    // Validation for password
-    console.log(newUser.password);
-    const passwordValid = passwordRegex.test(newUser.password);
-    console.log("passwordValid", passwordValid);
-    setValidNewUser((prev) => ({
-      ...prev,
-      validPassword: passwordValid,
-    }));
-  }, [newUser.password]);
-  useEffect(() => {}, [validNewUser.validPassword]);
+  const handleEmailChange = (email) => {
+    setSignInButtonTriggered(false);
 
-  const handleReEnteredPassword = (item) => {
-    setNewUser((prev) => ({ ...prev, reEnterPassword: item }));
-  };
-
-  useEffect(() => {
-    // Validation re enter password
-    if (newUser.password === newUser.reEnterPassword) {
-      console.log("passwords match");
-      setPasswordsMatch(true);
-    } else {
-      setPasswordsMatch(false);
-    }
-  }, [newUser.reEnterPassword]);
-
-  const handleEmail = (email) => {
-    //  validation email
-
+    setValidEmail(false);
     setNewUser((prev) => ({ ...prev, email }));
-    const validEmailformat = validator.isEmail(email);
-    const hasUppercase = /[A-Z]/.test(email);
-    console.log(hasUppercase);
+  };
 
-    validEmailformat && !hasUppercase && setValidEmail(true);
-    console.log("validateEmail");
+  const handlePasswordChange = (password) => {
+    setSignInButtonTriggered(false);
+
+    setValidUser((prev) => ({ ...prev, validPassword: false }));
+    setNewUser((prev) => ({
+      ...prev,
+      password,
+    }));
+  };
+
+  const handleReEnterPassword = (reEnterPassword) => {
+    setSignInButtonTriggered(false);
+    setPasswordsMatch(false);
+    setNewUser((prev) => ({
+      ...prev,
+      reEnterPassword,
+    }));
   };
 
   return (
-    <div className="flex items-center bg-slate-0 w-full h-screen text-2xl text-gray-700 top-2 relative">
+    <div className="flex items-center bg-slate-0 w-full h-screen text-2xl text-gray-700 relative">
       {/* Sign in section */}
       <div className="flex flex-col gap-8 justify-center items-center h-screen bg-slate-500 p-20">
         <div className="text-md">Welcome Back</div>
         <Link to="/login">
           <Button variant="contained" size="medium">
-            Sign In
+            Login
           </Button>
         </Link>
       </div>
       {/* User Registration section */}
       <div className="flex flex-col justify-center items-center mx-auto">
-        <h1 className="mx-auto font-bold mb-20 text-yellow-400">
-          CREATE ACCOUNT
-        </h1>
-        <div className="flex flex-col p-4 w-[600px] rounded-xl gap-y-12">
+        <h1 className="mx-auto font-bold text-yellow-400">CREATE ACCOUNT</h1>
+        <div className="flex flex-col w-[300px] rounded-xl gap-y-6">
           {/* Input User Name */}
           {/* --------------- */}
-          <div className="flex items-center relative">
-            <PersonOutlineOutlinedIcon className="absolute text-slate-400" />
-            <input
-              placeholder="Name"
-              name="name"
-              type="text"
-              className="w-full border-2 bg-slate-200 focus:border-gray-600 text-xl px-6 py-2 rounded-md text-[13px]"
-              onChange={(e) => handleUsername(e.target.value)}
-            />
-            <div className="absolute text-[13px] right-0 text-red-700 mb-[-100px] flex flex-col gap-y-[-30px] rounded-md p-1">
-              {newUser.username && !validNewUser.validUsername && (
-                <div className="bg-yellow-300 z-20">
-                  <div className="mb-[-17px]">Enter a valid user name -</div>
-                  <div>4 Charecters, 1 Smallcase, 1 Uppercase 1 Number</div>
-                </div>
-              )}
+          <div className="flex flex-col">
+            <div className="relative flex items-center">
+              <div className="absolute text-slate-800 mx-2 ">
+                <PersonOutlineOutlinedIcon />
+              </div>
+              <input
+                placeholder="Name"
+                name="name"
+                type="text"
+                className="w-full border-2  border-blue-600 text-xl px-8 py-2 rounded-md"
+                onChange={(e) => handleUsernameChange(e.target.value)}
+              />
+            </div>
+            <div className="text-[13px] right-0 text-red-700  flex flex-col gap-y-[-30px] rounded-md p-1">
+              {signInButtonTriggered &&
+                newUser.username &&
+                !validUser.validUsername && (
+                  <div className="bg-yellow-300 z-20">
+                    <div className="mb-[-17px]">Enter a valid user name -</div>
+                    <div>4 Charecters, 1 Smallcase, 1 Uppercase 1 Number</div>
+                  </div>
+                )}
             </div>
           </div>
 
           {/* Input Email */}
           {/* ---------- */}
 
-          <div className="flex justify-between  items-center inline relative">
-            <EmailOutlinedIcon className="absolute text-slate-400" />
-            <input
-              placeholder="email"
-              name="email"
-              type="email"
-              className="w-full border-2 bg-slate-200 focus:border-gray-600 text-xl px-6 py-2 rounded-md text-[13px]"
-              onChange={(e) => handleEmail(e.target.value)}
-            />
-            <div className="absolute right-0 mb-[-70px] text-[15px] text-red-700">
-              {newUser.email && !validEmail && (
-                <span className=" rounded-md p-1 z-50 bg-yellow-300">
-                  Enter a correct email
+          <div className="flex items-center flex-col">
+            <div className="relative flex items-center">
+              <EmailOutlinedIcon className="absolute text-slate-800 mx-2" />
+              <input
+                placeholder="email"
+                name="email"
+                type="email"
+                className="w-full border-2 border-blue-600 text-xl px-8 py-2 rounded-md text-[13px]"
+                onChange={(e) => handleEmailChange(e.target.value)}
+              />
+            </div>
+            <div className="right-0 text-[15px] text-red-700">
+              {signInButtonTriggered && newUser.email && !validEmail && (
+                <span className="rounded-md p-1 z-50 bg-yellow-300">
+                  Please Enter Valid Email
                 </span>
               )}
             </div>
@@ -222,59 +235,66 @@ const Signup = () => {
 
           {/*Input Password  */}
           {/* ------------- */}
-          <div className="flex items-center inline relative">
-            <LockOpenOutlinedIcon className="absolute text-slate-400" />
-            <input
-              placeholder="password"
-              value={newUser.password}
-              name="password"
-              type={passwordView ? "text" : "password"}
-              className="w-full border-2 bg-slate-200 focus:border-gray-600 text-xl px-6 py-2 rounded-md text-[13px]"
-              onChange={(e) => handleEnteredPassword(e.target.value)}
-            />
-            <div
-              className="absolute right-2 hover:cursor-pointer"
-              onClick={() => setPasswordView((prev) => !prev)}
-            >
-              {passwordView ? <VisibilityIcon /> : <VisibilityOffIcon />}
+          <div className="flex items-center flex-col">
+            <div className="relative flex items-center">
+              <LockOpenOutlinedIcon className="absolute text-slate-800 mx-2" />
+              <input
+                placeholder="password"
+                value={newUser.password}
+                name="password"
+                type={passwordView ? "text" : "password"}
+                className="w-full border-2 bg-slate-200 border-blue-600 text-xl px-8 py-2 rounded-md text-[13px]"
+                onChange={(e) => handlePasswordChange(e.target.value)}
+              />
+              <div
+                className="absolute right-2 hover:cursor-pointer"
+                onClick={() => setPasswordView((prev) => !prev)}
+              >
+                {passwordView ? <VisibilityIcon /> : <VisibilityOffIcon />}
+              </div>
             </div>
-            <div className="absolute text-[13px] right-0 text-red-700 mb-[-70px] flex flex-col gap-y-[-30px]">
-              {newUser.password && !validNewUser.validPassword && (
-                <div className="rounded-md p-1 z-50 bg-yellow-300">
-                  <div className="mb-[-17px]">Enter a valid Password- </div>
-                  <div>
-                    4 Charecters, 1 Smallcase, 1 Uppercase 1 Number 1 Special
-                    charecter [@#$%*_]
+            <div className="text-[13px] right-0 text-red-700 flex flex-col gap-y-[-30px]">
+              {signInButtonTriggered &&
+                newUser.password &&
+                !validUser.validPassword && (
+                  <div className="rounded-md p-1 z-50 bg-yellow-300">
+                    <div className="mb-[-17px]">Enter a valid Password- </div>
+                    <div>
+                      4 Charecters, 1 Smallcase, 1 Uppercase 1 Number 1 Special
+                      charecter [@#$%*_]
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
           </div>
 
           {/* Input Re Enter Password */}
           {/* ----------------------- */}
-          <div className="flex  items-center inline relative">
-            <LockOpenOutlinedIcon className="absolute text-slate-400" />
-            <input
-              placeholder="re-enter password"
-              value={newUser.reEnterPassword}
-              name="re-password"
-              type={reEnteredpasswordView ? "text" : "password"}
-              className="w-full border-2 bg-slate-200 focus:border-gray-600 text-xl px-6 py-2 rounded-md text-[13px]"
-              onChange={(e) => handleReEnteredPassword(e.target.value)}
-            />
-            <div
-              className="absolute right-2 hover:cursor-pointer"
-              onClick={() => setReEnteredPasswordView((prev) => !prev)}
-            >
-              {reEnteredpasswordView ? (
-                <VisibilityIcon />
-              ) : (
-                <VisibilityOffIcon />
-              )}
+          <div className="flex items-center flex-col">
+            <div className="relative flex items-center">
+              <LockOpenOutlinedIcon className="absolute text-slate-800 mx-2" />
+              <input
+                placeholder="re-enter password"
+                value={newUser.reEnterPassword}
+                name="re-password"
+                type={reEnteredpasswordView ? "text" : "password"}
+                className="w-full border-2 bg-slate-200 border-blue-600 text-xl px-8 py-2 rounded-md text-[13px]"
+                onChange={(e) => handleReEnterPassword(e.target.value)}
+              />
+              <div
+                className="absolute right-2 hover:cursor-pointer"
+                onClick={() => setReEnteredPasswordView((prev) => !prev)}
+              >
+                {reEnteredpasswordView ? (
+                  <VisibilityIcon />
+                ) : (
+                  <VisibilityOffIcon />
+                )}
+              </div>
             </div>
-            <div className="text-[13px] text-red-700 right-0 mb-[-60px] absolute">
-              {newUser.password &&
+            <div className="text-[13px] text-red-700 right-0">
+              {signInButtonTriggered &&
+                newUser.password &&
                 newUser.reEnterPassword &&
                 !passwordsMatch && (
                   <span className="rounded-md p-1 z-50 bg-yellow-300">
