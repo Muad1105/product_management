@@ -10,19 +10,10 @@ import itemCategoryRoutes from "./routes/product/itemCategoryRoutes.js";
 import specificationsRoutes from "./routes/product/specificationRoutes.js";
 import configurationRoutes from "./routes/product/configurationRoutes.js";
 dotenv.config();
-import session from "express-session";
 
 const app = express();
 
 // session controller to pass data from one controller to another
-
-app.use(
-  session({
-    secret: process.env.JWT_SECRET_KEY,
-    resave: false,
-    saveUninitialized: true,
-  })
-);
 
 //middleware for parsing request body
 app.use(express.json());
@@ -46,7 +37,7 @@ app.use("/user", userRoutes);
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
-    const PORT = 1111;
+    const PORT = process.env.PORT;
     app.listen(PORT, () => {
       console.log(`App is listening to port ${PORT}`);
     });
