@@ -9,7 +9,7 @@ import InputBase from "@mui/material/InputBase";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import { useDispatch } from "react-redux";
-import { searchProductItems } from "../redux/productReducer";
+import { searchProductItems } from "../../redux/productReducer";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -53,7 +53,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchAppBar() {
+export default function SearchBar() {
   const dispatch = useDispatch();
   const handleOnChange = (value) => {
     console.log(value);
@@ -63,7 +63,7 @@ export default function SearchAppBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Toolbar>
-        <Search>
+        <Search style={{ border: "2px solid blue" }}>
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>

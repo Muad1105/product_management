@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import Button from "@mui/material/Button";
-import Pagination from "@mui/material/Pagination";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import WishlistDisplayBar from "../../components/wishlist/AppearingWishlistDisplayBar";
-import SearchBar from "../../components/SearchBar";
+import WishlistDisplayBar from "./wishlist/AppearingWishlistDisplayBar";
+import SearchBar from "./SearchBar";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { storeLoggedInUserId } from "../../redux/userReducer";
+import { storeLoggedInUserData } from "../../redux/userReducer";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import Logout from "./Logout";
 
 const Navbar = () => {
   // Onclick to wishlistbar view
@@ -18,16 +17,12 @@ const Navbar = () => {
   // feched user data from server
   const [loggedInUser, setLoggedInUser] = useState("");
 
-  // const dispatch = useDispatch();
-
-  const fetchLoggedInUserIdFromRedux = useSelector(
-    (state) => state.userId.loggedInUserId
-  );
-  console.log(fetchLoggedInUserIdFromRedux);
-
+  const userData = useSelector((state) => state.userData.loggedInUser);
+  console.log("userData", userData);
   useEffect(() => {
-    setLoggedInUserId(fetchLoggedInUserIdFromRedux);
-  }, [fetchLoggedInUserIdFromRedux]);
+    loggedInUserId && fetchUserData();
+    console.log(loggedInUserId);
+  }, [loggedInUserId]);
 
   // fetch userData on load
   const fetchUserData = async () => {
@@ -39,21 +34,18 @@ const Navbar = () => {
       });
   };
 
-  useEffect(() => {
-    loggedInUserId && fetchUserData();
-    console.log(loggedInUserId);
-  }, [loggedInUserId]);
-
   return (
-    <div className="w-screen h-[70px] bg-blue-950 text-slate-100 flex justify-between items-center px-10 relative">
+    <div className="w-screen h-[70px] text-blue-700 flex justify-between items-center px-10 relative z-100 bg-yellow-300">
       {/* User Name*/}
-      <div></div>
+      <div>Product-Management</div>
       <SearchBar />
       <div className="flex items-center justify-center gap-12">
         <div className="cursor-pointer flex gap-2 items-center justify-center ">
           <AccountCircleIcon />
-          <div>{loggedInUser}</div>
+          <div className="text-blue-700">{loggedInUser}</div>
         </div>
+        <div>User: {userData.name}</div>
+        <Logout />
         {/* Wishlist Icon */}
         <div
           className="cursor-pointer p-2 flex  items-center justify-center gap-x-4"

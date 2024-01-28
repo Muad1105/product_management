@@ -9,12 +9,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -24,20 +20,10 @@ import Navbar from "./Navbar";
 import { Collapse } from "@mui/material";
 import DevicesOtherIcon from "@mui/icons-material/DevicesOther";
 import { useDispatch } from "react-redux";
-import { displayCategorySidebarSelection } from "../redux/productReducer";
+import { displayCategorySidebarSelection } from "../../redux/productReducer";
 
 const SideBar = () => {
   const [itemCategoriesDropdown, setItemCategoriesDropdown] = useState([]);
-  const [showCategoryDropdown, setShowCategoryDropdown] = useState();
-  const [dropDownDisplayedCategory, setDropDownDisplayedCategory] = useState(
-    []
-  );
-  const [toggleAllCategoriesDropdown, setToggleAllCategoriesDropdown] =
-    useState(false);
-  const [toggleCategoryType, setToggleCategoryType] = useState(false);
-  const [toggleCategoryItems, setToggleCategoryItems] = useState(false);
-
-  const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [isCollapse, setIsCollapse] = useState(false);
 
@@ -45,10 +31,6 @@ const SideBar = () => {
 
   const handleDrawerOpen = () => {
     setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
   };
 
   // collapse item
@@ -141,23 +123,6 @@ const SideBar = () => {
     <div className="flex flex-col gap-y-4">
       <Box sx={{ display: "flex" }}>
         {/* <CssBaseline /> */}
-        <AppBar position="fixed" sx={{ width: "100vw" }} open={open}>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{
-                marginRight: 5,
-                ...(open && { display: "none" }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Navbar />
-          </Toolbar>
-        </AppBar>
         <Drawer variant="permanent" open={open}>
           <Divider />
           <List sx={{ marginTop: "60px" }}>
