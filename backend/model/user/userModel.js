@@ -5,7 +5,7 @@ const userSchema = mongoose.Schema({
   password: { type: String, required: true, minLength: 4 },
   email: { type: String, required: true, unique: true },
   otp: { type: Number, required: false },
-  wishlist: [{ type: String, required: false }],
+  wishlist: [],
 });
 
 export const User = mongoose.model("User", userSchema);

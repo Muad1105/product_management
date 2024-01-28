@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import SingleProductIconSized from "../home/product/SingleProductDisplayHomePageIconSized";
+import SingleProductIconSized from "../product/SingleProductDisplayHomePageIconSized";
 import axios from "axios";
 import Loading from "../Loading";
-import { storeLoggedInUser } from "../../redux/userReducer";
+// import { storeLoggedInUser } from "../../../redux/userReducer";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
 
 const AppearingWishlistDisplayBar = ({ onClose }) => {
   // Get wishlist ID data
@@ -24,13 +25,14 @@ const AppearingWishlistDisplayBar = ({ onClose }) => {
     wishlist[0] && getWishlistProducts();
   }, [wishlist]);
 
-  const userId = useSelector((state) => state.userData.loggedInUser.id);
+  const userId = useSelector((state) => state.userData.loggedInUser.id.id);
 
   console.log(userId);
 
   // fetch produts for the wishlist IDs
   const fetchWishlist = async () => {
     setLoading(true);
+
     await axios.get(`http://localhost:1111/user/${userId}`).then((res) => {
       console.log("response", res.data.user);
       const wishlistData = res.data.user.wishlist;
@@ -45,8 +47,9 @@ const AppearingWishlistDisplayBar = ({ onClose }) => {
       console.log(res.data);
       const productData = res.data.filter((item, index) => {
         console.log("wishlist", wishlist, "item.id", item.id);
-        return wishlist.includes(item.id);
+        return wishlist.includes(item._id);
       });
+      console.log(productData);
       setAvailableWishlistProducts(productData);
       setLoading(false);
     });
@@ -67,9 +70,15 @@ const AppearingWishlistDisplayBar = ({ onClose }) => {
     >
       {/* Stop mouse event propogation from parent */}
       <div
-        className="bg-slate-100 w-[300px] h-[100vh] text-slate-700"
+        className="bg-slate-100 w-[300px] h-[100vh] text-slate-700  overflow-scroll"
         onClick={(e) => e.stopPropagation()}
       >
+        <div
+          className="top-0 text-red-800 z-100 cursor-pointer"
+          onClick={onClose}
+        >
+          <CancelPresentationIcon />
+        </div>
         {loading ? (
           <div className="flex justify-center">
             <Loading />
@@ -88,7 +97,7 @@ const AppearingWishlistDisplayBar = ({ onClose }) => {
                   <div className="absolute bottom-10 right-12 hover:cursor-pointer">
                     <DeleteIcon
                       style={{ color: "red", fontSize: "30px" }}
-                      onClick={()=>removeWishlistItem}
+                      onClick={() => removeWishlistItem}
                     />
                   </div>
                 </div>

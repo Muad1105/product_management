@@ -117,7 +117,7 @@ const Signup = () => {
         const res = await axios
           .post("http://localhost:1111/user/signup", userData)
           .then((res) => {
-            enqueueSnackbar("Book Created successfully", {
+            enqueueSnackbar("User Registered Successfully", {
               variant: "success",
             });
             navigate("/login");

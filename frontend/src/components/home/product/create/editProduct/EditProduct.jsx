@@ -64,7 +64,7 @@ const EditProduct = ({ productId, closeEditProduct }) => {
         price: selectedProductDetail.price,
         description: selectedProductDetail.description,
         availableQuantity: selectedProductDetail.availableQuantity,
-        specs: selectedProductDetail.specs && selectedProductDetail.specs,
+        specs: selectedProductDetail.specs,
       });
     setProductSpecDetails(selectedProductDetail.specs);
   }, [selectedProductDetail]);
@@ -75,6 +75,7 @@ const EditProduct = ({ productId, closeEditProduct }) => {
 
   useEffect(() => {
     console.log(productDetails);
+    setProductDetails(productDetails);
   }, [productDetails]);
 
   const setSpecsData = (data) => {
@@ -306,7 +307,7 @@ const EditProduct = ({ productId, closeEditProduct }) => {
             />
           </div>
           <EditSpecs
-            specDetails={productSpecDetails && productSpecDetails}
+            specDetails={productSpecDetails}
             setSpecsData={setSpecsData}
           />
           <div className="flex space-between ">

@@ -1,18 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setSelectedProduct } from "../../../redux/productReducer";
+import { setSelectedProduct } from "../../../redux/productReducer.jsx";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import AddToWishlistPopup from "../../wishlist/ConfirmAddToWishlistPopup.jsx";
+import AddToWishlistPopup from "../wishlist/ConfirmAddToWishlistPopup.jsx";
 import axios from "axios";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditProduct from "./create/editProduct/EditProduct.jsx";
+import displayEditItemReducer, {
+  setShowEditProductDisplay,
+} from "../../../redux/displayEditItemReducer.jsx";
+import { setShowProductsListModified } from "../../../redux/showItemChangesReducer.jsx";
 
 const SingleProductDisplayHomePageIconSized = ({ item, onClose }) => {
   const [wishlistConfirmation, setWishlistConfirmation] = useState(false);
   const [brandId, setBrandId] = useState(item.brand);
   const [brandName, setBrandName] = useState("");
+  const [editProduct, setEditProduct] = useState(false);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // console.log(item);
+  }, []);
 
   useEffect(() => {
     fetchBrandName();
@@ -20,12 +32,30 @@ const SingleProductDisplayHomePageIconSized = ({ item, onClose }) => {
 
   const fetchBrandName = async () => {
     const res = await axios.get(`http://localhost:1111/brand/${brandId}`);
+    
     setBrandName(res.data.name);
   };
 
   const handleClick = () => {
-    dispatch(setSelectedProduct(item.id));
+    dispatch(setSelectedProduct(item._id));
     navigate(`/product_details`);
+  };
+
+  const handleEditProduct = () => {
+    console.log("edit product");
+    const data = { display: true, productId: item._id };
+    dispatch(setShowEditProductDisplay(data));
+  };
+
+  const handleDeleteProduct = async () => {
+    console.log("delete product");
+    console.log(item);
+    const res = await axios
+      .delete(`http://localhost:1111/product/${item._id}`)
+      .then((res) => {
+        console.log(res.data);
+      });
+    dispatch(setShowProductsListModified(true));
   };
 
   return (
@@ -49,6 +79,17 @@ const SingleProductDisplayHomePageIconSized = ({ item, onClose }) => {
         </div>
         <div className="flex flex-col justify-center">
           <div></div>
+        </div>
+      </div>
+      <div
+        className="flex justify-center gap-4"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="text-green-600" onClick={() => handleEditProduct()}>
+          <EditIcon />
+        </div>
+        <div className="text-red-600" onClick={() => handleDeleteProduct()}>
+          <DeleteIcon />
         </div>
       </div>
       {wishlistConfirmation && (

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import SingleProductDisplayHomePageIconSized from "./SingleProductDisplayHomePageIconSized.jsx";
-import Loading from "../../Loading.jsx";
-import { useSelector } from "react-redux";
+import Loading from "../Loading.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { setShowProductsListModified } from "../../../redux/showItemChangesReducer.jsx";
 
 const ProductList = () => {
   const [allProductsData, setAllProductsData] = useState([]);
@@ -13,6 +14,8 @@ const ProductList = () => {
   const [filteredProductData, setFilteredProductData] = useState([]);
   const [filteredSearchData, setFilteredSearchData] = useState([]);
 
+  const dispatch = useDispatch();
+
   // category from the sidebar selected
   const selectedCategoryId = useSelector(
     (state) => state.productInComponent.categorySelected
@@ -21,6 +24,19 @@ const ProductList = () => {
   const searchProductAphabetData = useSelector(
     (state) => state.productInComponent.searchProducts
   );
+
+  const productListModified = useSelector(
+    (state) => state.displaySection.productModified
+  );
+  console.log(productListModified);
+
+  //Changes when Product deleted or added or edited
+  useEffect(() => {
+    fetchAllProductData();
+    fetchAllBrands();
+    fetchAllItemCategories();
+    dispatch(setShowProductsListModified(false));
+  }, [productListModified]);
 
   useEffect(() => {
     fetchAllProductData();
@@ -115,6 +131,7 @@ const ProductList = () => {
         e.title.toLowerCase().includes(searchProductAphabetData.toLowerCase())
       );
     });
+    console.log(searchResult);
     setFilteredSearchData(searchResult);
   };
 
@@ -128,6 +145,7 @@ const ProductList = () => {
 
   const fetchAllProductData = async () => {
     setLoading(true);
+
     await axios.get("http://localhost:1111/product").then((res) => {
       setAllProductsData(res.data);
       setLoading(false);

@@ -41,6 +41,7 @@ const createUser = async (request, response) => {
       username: username,
       password: hashedPassword,
       email: email,
+      wishlist: [],
     };
 
     console.log(newUser);

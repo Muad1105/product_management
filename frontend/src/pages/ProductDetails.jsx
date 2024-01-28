@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar.jsx";
+import Navbar from "../components/home/Navbar.jsx";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Button from "@mui/material/Button";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useNavigate } from "react-router-dom";
-import AddToWishlistPopup from "../components/wishlist/ConfirmAddToWishlistPopup.jsx";
-import EditProduct from "../components/home/components/EditProduct.jsx";
+import AddToWishlistPopup from "../components/home/wishlist/ConfirmAddToWishlistPopup.jsx";
+import EditProduct from "../components/home/product/create/editProduct/EditProduct.jsx";
 import { useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -18,6 +18,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 const ProductDetails = () => {
   const [product, setProduct] = useState([]);
+  const [allSpecifications, setAllSpecifications] = useState([]);
+  const [allConfigurations, setAllConfigurations] = useState([]);
+  const [productSpecsFetched, setProductSpecsFeched] = useState([]);
+  const [specsToDisplay, setSpecsToDisplay] = useState([]);
   const [editProductModal, setEditProductModal] = useState(false);
   const [wishlistConfirmation, setWishlistConfirmation] = useState(false);
 
@@ -25,14 +29,63 @@ const ProductDetails = () => {
   console.log(productId);
   const navigate = useNavigate();
   useEffect(() => {
+    getAllSpecifications();
+    getAllConfigurations();
     fetchProductData();
   }, []);
+
+  useEffect(() => {
+    if (
+      allSpecifications[0] &&
+      allConfigurations[0] &&
+      productSpecsFetched[0]
+    ) {
+      console.log(allSpecifications, allConfigurations, productSpecsFetched);
+
+      const specsDataName = productSpecsFetched.map((ele, i) => {
+        console.log(ele);
+        const specificationData = allSpecifications.filter((spec, i) => {
+          console.log(spec);
+          return ele.specificationId == spec._id;
+        });
+        const configurationData = allConfigurations.filter((config, i) => {
+          return ele.configurationId == config._id;
+        });
+        return {
+          specification: specificationData[0],
+          configuration: configurationData[0],
+        };
+      });
+      setSpecsToDisplay(specsDataName);
+    }
+  }, [allSpecifications, allConfigurations, productSpecsFetched]);
+
+  useEffect(() => {
+    console.log(specsToDisplay);
+  }, [specsToDisplay]);
+
+  const getAllSpecifications = async () => {
+    const data = await axios.get("http://localhost:1111/specification");
+    console.log(data.data);
+    setAllSpecifications(data.data);
+  };
+
+  const getAllConfigurations = async () => {
+    const data = await axios.get("http://localhost:1111/configuration");
+    console.log(data.data);
+    setAllConfigurations(data.data);
+  };
+
+  useEffect(() => {
+    console.log(product);
+  }, [product]);
 
   const fetchProductData = async () => {
     await axios
       .get(`http://localhost:1111/product/${productId}`)
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data.specs);
+        setProductSpecsFeched(res.data.specs);
         setProduct(res.data);
       });
   };
@@ -57,32 +110,10 @@ const ProductDetails = () => {
 
   const drawerWidth = 240;
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
   return (
-    <div className="flex flex-col gap-y-20">
-      <Box>
-        <AppBar position="fixed" sx={{ width: "100vw" }} open={open}>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{
-                marginRight: 5,
-                ...(open && { display: "none" }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Navbar />
-          </Toolbar>
-        </AppBar>
-      </Box>
-      <div className="mt-6">
+    <div className="flex flex-col gap-y-6">
+      <Navbar />
+      <div className="mt-2">
         <div className="px-4" onClick={() => navigate(`/user/${userId}`)}>
           Home{" "}
           <span className="px-4">
@@ -107,6 +138,20 @@ const ProductDetails = () => {
           <div className="w-[60vw] flex flex-col justify-start items-start gap-y-4">
             <div>{product.brand}</div>
             <div>{product.title}</div>
+            {/* Map Specs */}
+            <div>
+              {" "}
+              SPECS -{" "}
+              {specsToDisplay[0] &&
+                specsToDisplay.map((specs, idx) => {
+                  console.log(specs);
+                  return (
+                    <span>
+                      {specs.specification.name}: {specs.configuration.name},{" "}
+                    </span>
+                  );
+                })}
+            </div>
             <div>
               Availability:{" "}
               {product.availableQuantity > 0 ? (

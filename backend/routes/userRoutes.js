@@ -53,6 +53,6 @@ userRoutes.delete("/:id", deleteUserById);
 userRoutes.post("/send-otp", sendOtp);
 
 //User wishlist
-userRoutes.post("/wishlist", addWishlistItem);
+userRoutes.patch("/wishlist", addWishlistItem);
 
 export default userRoutes;

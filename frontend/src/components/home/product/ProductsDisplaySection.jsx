@@ -3,10 +3,13 @@ import Button from "@mui/material/Button";
 import { useParams } from "react-router-dom";
 import AddSpecification from "./create/AddSpecification";
 import AddSubCategory from "./create/AddConfiguration";
-import AddProduct from "../components/AddProduct";
+import AddProduct from "./create/addProduct/AddProduct";
 import ProductList from "./ProductList";
 import AddItemCategory from "./create/AddItemCategory";
 import AddBrand from "./create/AddBrand";
+import { useDispatch, useSelector } from "react-redux";
+import EditProduct from "./create/editProduct/EditProduct";
+import { setShowEditProductDisplay } from "../../../redux/displayEditItemReducer";
 
 const ProductsDisplaySection = () => {
   const [showBrandModel, setShowBrandModel] = useState(false);
@@ -14,6 +17,17 @@ const ProductsDisplaySection = () => {
   const [showSpecificationModel, setShowSpecificationModel] = useState(false);
   const [showConfigurationModel, setShowConfigurationModel] = useState(false);
   const [showProductModel, setShowProductModel] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const displayEditProduct = useSelector(
+    (state) => state.displayEditItem.displayEditProduct
+  );
+
+  const handleCloseEditProduct = () => {
+    const data = { display: false, productId: "" };
+    dispatch(setShowEditProductDisplay(data));
+  };
 
   return (
     <div className="w-[74vw] h-full relative mt-20">
@@ -104,6 +118,12 @@ const ProductsDisplaySection = () => {
         )}
         {showProductModel && (
           <AddProduct onClose={() => setShowProductModel(false)} />
+        )}
+        {displayEditProduct.display && (
+          <EditProduct
+            closeEditProduct={handleCloseEditProduct}
+            productId={displayEditProduct.productId}
+          />
         )}
       </div>
       <ProductList />
