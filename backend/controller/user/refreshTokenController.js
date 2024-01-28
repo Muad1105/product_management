@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 const refreshToken = (req, res, next) => {
   console.log("req", req.headers);
   const cookie = req.headers.cookie;
-  console.log("headers", cookie, "cookies", cookie);
+  console.log("cookies", cookie);
   const prevToken = cookie.split("=")[1];
 
   if (!cookie) {
@@ -34,7 +34,6 @@ const refreshToken = (req, res, next) => {
     });
     // set request.id to the user id
     console.log("req.id", req.id);
-    req.id = user.id;
     next();
   });
 };

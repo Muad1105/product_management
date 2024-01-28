@@ -5,7 +5,6 @@ const brandController = {};
 //create Brand
 
 brandController.createBrand = async (req, res, next) => {
-  console.log("post");
   const { name } = req.body;
   try {
     let nameExists;
@@ -22,9 +21,7 @@ brandController.createBrand = async (req, res, next) => {
     };
     await Brand.create(newBrand);
     return res.status(200).json({ message: "Brand Created Successfully." });
-  } catch (err) {
-    console.log(err);
-  }
+  } catch (err) {}
 };
 
 brandController.getAllBrands = async (req, res, next) => {
@@ -38,10 +35,8 @@ brandController.getAllBrands = async (req, res, next) => {
 
 brandController.getBrandById = async (req, res, next) => {
   try {
-    console.log("id find brand");
     const id = req.params.id;
     const brand = await Brand.findById(id);
-    console.log(brand);
     res.status(200).send(brand);
   } catch (err) {
     return res.status(500).json({ message: "Internal Server Error" });

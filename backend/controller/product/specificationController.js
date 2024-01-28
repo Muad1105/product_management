@@ -7,11 +7,9 @@ const specificationControllers = {};
 
 specificationControllers.createSpecification = async (request, response) => {
   try {
-    console.log(request.body);
     const { name } = request.body;
 
     if (!name || name == "") {
-      console.log("error");
       return response
         .status(400)
         .json({ error: "Name is required for a category" });
@@ -43,10 +41,8 @@ specificationControllers.createSpecification = async (request, response) => {
 // Get all specifications from database
 
 specificationControllers.getAllSpecifications = async (req, res) => {
-  console.log("logged");
   try {
     const specsList = await Specification.find();
-    console.log("specsList", specsList);
     res.status(200).send(specsList);
   } catch (error) {
     console.error(error);
@@ -57,11 +53,9 @@ specificationControllers.getAllSpecifications = async (req, res) => {
 //Get a specification by ID
 
 specificationControllers.getSpecificationById = async (req, res) => {
-  console.log("logged");
   try {
     const id = req.params.id;
     const specifications = await Specification.findById(id);
-    console.log("specifications", specifications);
     res.status(200).send(specifications);
   } catch (error) {
     console.error(error);
@@ -75,7 +69,6 @@ specificationControllers.editSpecificationById = async (req, res) => {
   try {
     const id = req.params.id;
     const { name } = req.body;
-    console.log(name, id);
     if (!name) {
       return res.status(400).json({ error: "Name is required for a category" });
     }
@@ -97,7 +90,6 @@ specificationControllers.deleteSpecification = async (request, response) => {
 
     await Specification.findByIdAndDelete(id);
     if (!id) {
-      console.log("No Result");
       return response
         .status(500)
         .json({ message: "specification Item Not Found" });

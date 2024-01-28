@@ -8,7 +8,7 @@ const saltRounds = 10; // Number of salt rounds for bcrypt
 //Create user
 
 const createUser = async (request, response) => {
-  console.log("signup request.body", request.body);
+  console.log("signup request.body");
   const { email, username, password, wishlist } = request.body;
   try {
     let existingUser;

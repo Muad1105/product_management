@@ -18,6 +18,7 @@ export const getAllUsers = async (request, response) => {
 export const getUserById = async (request, response) => {
   // console.log(request);
   const userId = request.id || request.params.id;
+  const token = request.token;
   console.log("userID", userId);
   let user;
   try {
@@ -28,7 +29,7 @@ export const getUserById = async (request, response) => {
       return response.status(404).json({ message: "User not found." });
     }
     console.log("Sending Response");
-    return response.status(200).json({ user });
+    return response.status(200).json({ user, token });
   } catch (error) {
     console.log(error);
     response.status(500).json({ message: "Internal Server Error" });

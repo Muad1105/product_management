@@ -29,7 +29,6 @@ const login = async (req, res, next) => {
     expiresIn: "1d",
   });
 
-  req.session.token = token;
   //Cookie
 
   res.cookie(String(existingUser._id), token, {
@@ -39,9 +38,11 @@ const login = async (req, res, next) => {
     sameSite: "lax",
   });
 
-  return res
-    .status(200)
-    .json({ message: "Successfully logged in", user: existingUser, token });
+  return res.status(200).json({
+    message: "Successfully logged in",
+    user: existingUser,
+    token: token,
+  });
 };
 
 export default login;
