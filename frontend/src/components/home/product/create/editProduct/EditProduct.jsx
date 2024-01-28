@@ -7,12 +7,12 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useSnackbar } from "notistack";
-
 import { useSelector, useDispatch } from "react-redux";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
-import { setProductPosted } from "../../../redux/productReducer";
+import EditSpecs from "./EditSpecs";
 
-const AddProduct = ({ id, onClose }) => {
+const EditProduct = ({ productId, closeEditProduct }) => {
   const [productDetails, setProductDetails] = useState({
     itemCategory: "",
     title: "",
@@ -21,11 +21,12 @@ const AddProduct = ({ id, onClose }) => {
     price: 0,
     description: "",
     availableQuantity: 0,
-    specificationId: "",
-    configurationId: "",
+    specs: [{ specificationId: "", configurationId: "" }],
   });
 
-  const [inputError, setInputError] = useState(false);
+  const [productSpecDetails, setProductSpecDetails] = useState([]);
+
+  const [selectedProductDetail, setSelectedProductDetail] = useState([]);
 
   // Fetch state data specification and configuration
   const [allSpecifications, setAllSpecifications] = useState([]);
@@ -33,18 +34,54 @@ const AddProduct = ({ id, onClose }) => {
   const [allItemCategories, setAllItemCategories] = useState([]);
   const [allBrands, setAllBrands] = useState([]);
 
-  useEffect(() => {
-    fetchItemCategories();
-    fetchBrands();
-    fetchSpecification();
-  }, []);
-
-  const productAdded = useSelector((state) => state);
-  console.log(productAdded);
+  const [inputError, setInputError] = useState(false);
 
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    fetchProduct();
+    fetchItemCategories();
+    fetchBrands();
+  }, []);
+
+  const fetchProduct = async () => {
+    const product = await axios.get(
+      `http://localhost:1111/product/${productId}`
+    );
+    setSelectedProductDetail(product.data);
+  };
+
+  useEffect(() => {
+    console.log(selectedProductDetail);
+    selectedProductDetail.specs &&
+      setProductDetails({
+        itemCategory: selectedProductDetail.itemCategory,
+        title: selectedProductDetail.title,
+        brand: selectedProductDetail.brand,
+        image: null,
+        price: selectedProductDetail.price,
+        description: selectedProductDetail.description,
+        availableQuantity: selectedProductDetail.availableQuantity,
+        specs: selectedProductDetail.specs && selectedProductDetail.specs,
+      });
+    setProductSpecDetails(selectedProductDetail.specs);
+  }, [selectedProductDetail]);
+
+  useEffect(() => {
+    console.log(productSpecDetails);
+  }, [productSpecDetails]);
+
+  useEffect(() => {
+    console.log(productDetails);
+  }, [productDetails]);
+
+  const setSpecsData = (data) => {
+    console.log(data);
+
+    setProductDetails((prev) => ({ ...prev }));
+  };
 
   const fetchItemCategories = async () => {
     const res = await axios
@@ -62,17 +99,6 @@ const AddProduct = ({ id, onClose }) => {
     console.log(res.data.allBrands);
     const data = await res.data.allBrands;
     setAllBrands(data);
-  };
-
-  const fetchSpecification = async () => {
-    console.log("fetch");
-    await axios
-      .get("http://localhost:1111/specification")
-      .then((res) => {
-        console.log("fetch specification", res.data);
-        setAllSpecifications((prev) => [...res.data]);
-      })
-      .catch((error) => console.log(error));
   };
 
   const handleProductDetails = async () => {
@@ -135,7 +161,7 @@ const AddProduct = ({ id, onClose }) => {
             variant: "success",
           });
           dispatch(setProductPosted());
-          onClose();
+          closeEditProduct();
         })
         .catch((error) => console.log(error));
     } catch (error) {
@@ -170,13 +196,14 @@ const AddProduct = ({ id, onClose }) => {
   return (
     <div
       className="fixed bottom-0 top-0 right-0 left-0 bg-opacity-50 bg-slate-800 z-50 flex justify-center items-center"
-      onClick={onClose}
+      onClick={closeEditProduct}
     >
       <div
-        className="w-[650px] h-[550px] rounded-xl pt-6 flex flex-col justify-center items-center bg-slate-100 relative"
+        className="w-[650px] h-[550px] rounded-xl pt-6 flex flex-col justify-center items-center bg-slate-100 relative overflow-scroll"
+        style={{ marginTop: "50px" }}
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="my-4 font-bold text-xl">Add Product</div>
+        <div className="my-4 font-bold text-xl">Edit Product</div>
         <div className="flex flex-col gap-y-2 w-[100%] px-6 py-4 h-full overflow-y-scroll">
           <div className="flex gap-x-4">
             {/* itemCategory Input */}
@@ -211,7 +238,7 @@ const AddProduct = ({ id, onClose }) => {
                   >
                     {allItemCategories &&
                       allItemCategories.map((e, i) => {
-                        console.log(e);
+                        // console.log(e);
                         return (
                           <MenuItem key={e._id} value={e._id}>
                             {e.name}
@@ -251,7 +278,7 @@ const AddProduct = ({ id, onClose }) => {
                   >
                     {allBrands &&
                       allBrands.map((e, i) => {
-                        console.log(e);
+                        // console.log(e);
                         return (
                           <MenuItem key={e._id} value={e._id}>
                             {e.name}
@@ -267,6 +294,7 @@ const AddProduct = ({ id, onClose }) => {
           <div className="flex space-between ">
             <label className="w-[200px]">Title : </label>
             <input
+              value={productDetails.title}
               type="text"
               className="border-2 border-slate-400 rounded-md w-full px-4 py-1"
               onChange={(e) =>
@@ -277,106 +305,16 @@ const AddProduct = ({ id, onClose }) => {
               }
             />
           </div>
-          {/* Select Specification */}
-          <div className="flex gap-x-4 items-center">
-            <div className="flex flex-col gap-y-2">
-              <div className="flex gap-4 items-center flex-wrap">
-                <div className="flex space-between  items-center gap-x-4">
-                  <label htmlFor="" className="flex">
-                    Specification <span>:</span>{" "}
-                  </label>
-                  <Box
-                    sx={{
-                      minWidth: 150,
-                      minHeight: 40,
-                      backgroundColor: "white",
-                      borderRadius: 1,
-                    }}
-                  >
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Specs
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        name="specification"
-                        style={{ borderColor: "red" }}
-                        value={productDetails.specification}
-                        label="Specs"
-                        onChange={(e) =>
-                          setProductDetails((prev) => ({
-                            ...prev,
-                            specificationId: e.target.value,
-                          }))
-                        }
-                      >
-                        {allSpecifications.map((e, i) => {
-                          console.log(e);
-                          return (
-                            <MenuItem
-                              key={e._id}
-                              value={e._id}
-                              style={{ borderColor: "red" }}
-                            >
-                              {e.name}
-                            </MenuItem>
-                          );
-                        })}
-                      </Select>
-                    </FormControl>
-                  </Box>
-                </div>
-                {/* Select Sub Specification */}
-                <div className="flex space-between gap-x-4  items-center">
-                  <label htmlFor="" className="flex">
-                    Configuration <span>:</span>
-                  </label>
-                  <Box
-                    sx={{
-                      minWidth: 150,
-                      minHeight: 40,
-                      backgroundColor: "white",
-                      borderRadius: 1,
-                    }}
-                  >
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Config
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={productDetails.configuration}
-                        label="Sub Specification"
-                        onChange={(e) =>
-                          setProductDetails((prev) => ({
-                            ...prev,
-                            configurationId: e.target.value,
-                          }))
-                        }
-                      >
-                        {allConfigurations &&
-                          allConfigurations.map((e, i) => {
-                            console.log(e);
-                            return (
-                              <MenuItem key={e._id} value={e._id}>
-                                {e.name}
-                              </MenuItem>
-                            );
-                          })}
-                      </Select>
-                    </FormControl>
-                  </Box>
-                </div>
-              </div>
-            </div>
-          </div>
+          <EditSpecs
+            specDetails={productSpecDetails && productSpecDetails}
+            setSpecsData={setSpecsData}
+          />
           <div className="flex space-between ">
             <label htmlFor="" className="w-[200px]">
               Price :{" "}
             </label>
             <input
+              value={productDetails.price}
               type="text"
               className="border-2 border-slate-400 rounded-md w-full px-4 py-1"
               onChange={(e) =>
@@ -392,6 +330,7 @@ const AddProduct = ({ id, onClose }) => {
               Description :{" "}
             </label>
             <input
+              value={productDetails.description}
               type="text"
               className="border-2 border-slate-400 rounded-md w-full px-4 py-1"
               onChange={(e) =>
@@ -407,6 +346,7 @@ const AddProduct = ({ id, onClose }) => {
               Available Quantity <span>: </span>
             </label>
             <input
+              value={productDetails.availableQuantity}
               type="number"
               className="border-2 border-slate-400 rounded-md w-full px-4 py-1"
               onChange={(e) =>
@@ -455,7 +395,7 @@ const AddProduct = ({ id, onClose }) => {
           >
             Add
           </Button>
-          <Button variant="outlined" size="small" onClick={onClose}>
+          <Button variant="outlined" size="small" onClick={closeEditProduct}>
             Discard
           </Button>
         </div>
@@ -464,4 +404,4 @@ const AddProduct = ({ id, onClose }) => {
   );
 };
 
-export default AddProduct;
+export default EditProduct;
