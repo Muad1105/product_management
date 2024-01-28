@@ -4,7 +4,6 @@ const productControllers = {};
 // Create a product
 
 productControllers.createProduct = async (request, response) => {
-  // console.log("enter", request.file.buffer);
   try {
     const {
       itemCategory,
@@ -12,13 +11,13 @@ productControllers.createProduct = async (request, response) => {
       brand,
       description,
       price,
-      specificationId,
-      configurationId,
+      specs,
       availableQuantity,
     } = request.body;
 
+    const specsRecieved = JSON.parse(request.body.specs);
+    console.log("specs", specs);
     const imageBuffer = request.file.buffer;
-
     // Convert the buffer to a Base64-encoded string
     const base64String = imageBuffer.toString("base64");
 
@@ -26,8 +25,7 @@ productControllers.createProduct = async (request, response) => {
       !itemCategory ||
       !title ||
       !brand ||
-      !specificationId ||
-      !configurationId ||
+      !specs[0] ||
       !price ||
       !description ||
       !base64String ||
@@ -38,26 +36,14 @@ productControllers.createProduct = async (request, response) => {
           "itemCategory, title, brand, specification ID, configuration ID, description, availableQuantity and Price are required for a product",
       });
     }
-    console.log(
-      "  itemCategory,  title, brand, description, price, specification,configuration, image: base64String,availableQuantity,",
-      itemCategory,
-      title,
-      brand,
-      description,
-      price,
-      specificationId,
-      configurationId,
-      base64String,
-      availableQuantity
-    );
+
     const newProduct = {
       itemCategory,
       title,
       brand,
       description,
       price,
-      specificationId,
-      configurationId,
+      specs: specsRecieved,
       image: base64String, // final buffer for the image
       availableQuantity,
     };
@@ -75,28 +61,26 @@ productControllers.createProduct = async (request, response) => {
 
 //  Get all products from database
 productControllers.getAllProducts = async (req, res) => {
-  console.log("all products list");
   try {
     const products = await Product.find();
 
-    const updatedImageProducts = products.map((product) => {
-      // Check if product.image is defined before attempting to convert to base64
+    // const updatedImageProducts = products.map((product) => {
+    //   // Check if product.image is defined before attempting to convert to base64
 
-      return {
-        id: product._id,
-        itemCategory: product.itemCategory,
-        title: product.title,
-        brand: product.brand,
-        description: product.description,
-        price: product.price,
-        specificationId: product.specificationId,
-        configurationId: product.configurationId,
-        image: product.image,
-        availableQuantity: product.availableQuantity,
-      };
-    });
+    //   return {
+    //     id: product._id,
+    //     itemCategory: product.itemCategory,
+    //     title: product.title,
+    //     brand: product.brand,
+    //     description: product.description,
+    //     price: product.price,
+    //     specs: product.specs,
+    //     image: product.image,
+    //     availableQuantity: product.availableQuantity,
+    //   };
+    // });
 
-    res.status(200).json(updatedImageProducts);
+    res.status(200).json(products);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -105,7 +89,6 @@ productControllers.getAllProducts = async (req, res) => {
 
 //Get product by ID
 productControllers.getProductById = async (req, res) => {
-  console.log("get");
   try {
     const id = req.params.id;
 
@@ -116,7 +99,6 @@ productControllers.getProductById = async (req, res) => {
 
     res.status(200).send(result);
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -124,7 +106,6 @@ productControllers.getProductById = async (req, res) => {
 // Edit Product by ID
 
 productControllers.editProductById = async (request, response) => {
-  console.log("put", request.body);
   try {
     const {
       itemCategory,
@@ -137,18 +118,6 @@ productControllers.editProductById = async (request, response) => {
       availableQuantity,
       image,
     } = request.body;
-    console.log(
-      "product",
-      itemCategory,
-      title,
-      brand,
-      description,
-      price,
-      specificationId,
-      configurationId,
-      availableQuantity,
-      image
-    );
 
     if (
       !itemCategory ||
@@ -178,14 +147,12 @@ productControllers.editProductById = async (request, response) => {
       image,
       availableQuantity,
     };
-    console.log(id);
     await Product.findByIdAndUpdate(id, newProduct);
 
     return response
       .status(200)
       .send({ message: "Product Updated Succesfully" });
   } catch (error) {
-    console.log(error);
     response
       .status(500)
       .send({ message: `status not defined ${error.message}` });
@@ -195,16 +162,16 @@ productControllers.editProductById = async (request, response) => {
 //Delete product by ID
 
 productControllers.deleteProductById = async (req, res) => {
+  console.log("Delete Product");
   try {
     const id = req.params.id;
+    console.log(id);
     if (!id) {
-      console.log("Product Not Found");
       return res.status(404).json({ message: "Product Not Found" });
     }
     const result = await Product.findByIdAndDelete(id);
     res.status(200).send({ message: "Product Deleted Successfully" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

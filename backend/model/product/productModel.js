@@ -12,16 +12,20 @@ const productSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   availableQuantity: { type: Number, required: true },
   image: { type: String, required: true },
-  specificationId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Specification",
-    required: true,
-  },
-  configurationId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Configuration",
-    required: true,
-  },
+  specs: [
+    {
+      specificationId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Specification",
+        required: true,
+      },
+      configurationId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Configuration",
+        required: true,
+      },
+    },
+  ],
 });
 
 export const Product = mongoose.model("Product", productSchema);
