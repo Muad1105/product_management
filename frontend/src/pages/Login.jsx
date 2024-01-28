@@ -6,7 +6,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import LogoutUserCheck from "./components/LogoutUserCheck";
+import { useDispatch } from "react-redux";
+import { storeLoggedInUserData } from "../redux/userReducer";
 
 const Login = () => {
   // Save input user name and password to login
@@ -25,6 +26,8 @@ const Login = () => {
 
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
   // Handle login function on submit button click
   const handleLogin = async () => {
     console.log("handleLogin");
@@ -40,6 +43,17 @@ const Login = () => {
       console.log("res data");
 
       const user = response.data;
+
+      console.log(user, user.token, user.user._id, user.user.username);
+
+      const data = {
+        token: user.token,
+        id: user.user._id,
+        name: user.user.username,
+      };
+
+      dispatch(storeLoggedInUserData(data));
+
       navigate(`/user/home`);
     } catch (error) {
       console.log("error");
