@@ -29,6 +29,13 @@ productRoutes.put(
   productControllers.editProductById
 );
 
+// Edit part of product
+productRoutes.patch(
+  "/",
+  upload.single("image"),
+  productControllers.createProduct
+);
+
 //  Route to delete product by ID
 productRoutes.delete("/:id", productControllers.deleteProductById);
 

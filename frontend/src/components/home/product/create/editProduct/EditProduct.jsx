@@ -54,7 +54,6 @@ const EditProduct = ({ productId, closeEditProduct }) => {
   };
 
   useEffect(() => {
-    console.log(selectedProductDetail);
     selectedProductDetail.specs &&
       setProductDetails({
         itemCategory: selectedProductDetail.itemCategory,
@@ -66,38 +65,29 @@ const EditProduct = ({ productId, closeEditProduct }) => {
         availableQuantity: selectedProductDetail.availableQuantity,
         specs: selectedProductDetail.specs,
       });
-    setProductSpecDetails(selectedProductDetail.specs);
+    setProductSpecDetails((prev) => selectedProductDetail.specs);
   }, [selectedProductDetail]);
 
   useEffect(() => {
-    console.log(productSpecDetails);
-  }, [productSpecDetails]);
-
-  useEffect(() => {
-    console.log(productDetails);
     setProductDetails(productDetails);
   }, [productDetails]);
 
   const setSpecsData = (data) => {
-    console.log(data);
-
     setProductDetails((prev) => ({ ...prev }));
   };
 
   const fetchItemCategories = async () => {
     const res = await axios
       .get("http://localhost:1111/itemCategory/allItemCategories")
-      .catch((err) => console.log(err));
+      .catch((err) => "");
     const data = await res.data;
-    console.log(data);
     setAllItemCategories(data);
   };
 
   const fetchBrands = async () => {
     const res = await axios
       .get("http://localhost:1111/brand/allBrands")
-      .catch((err) => console.log(err));
-    console.log(res.data.allBrands);
+      .catch((err) => "");
     const data = await res.data.allBrands;
     setAllBrands(data);
   };
@@ -117,7 +107,6 @@ const EditProduct = ({ productId, closeEditProduct }) => {
       setInputError(true);
     }
     try {
-      console.log("productDetails", productDetails);
       if (
         !productDetails.itemCategory ||
         !productDetails.title ||
@@ -130,11 +119,8 @@ const EditProduct = ({ productId, closeEditProduct }) => {
         !productDetails.configurationId
       ) {
         setInputError(true);
-        console.log("Missing Input Values");
         return;
       }
-
-      console.log("input values");
 
       const formData = new FormData();
 
@@ -151,35 +137,30 @@ const EditProduct = ({ productId, closeEditProduct }) => {
 
       // Make the POST
       await axios
-        .post("http://localhost:1111/product", formData, {
+        .patch("http://localhost:1111/product", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         })
         .then((res) => {
-          console.log(res);
           enqueueSnackbar("Product Created Succesfully", {
             variant: "success",
           });
           dispatch(setProductPosted());
           closeEditProduct();
         })
-        .catch((error) => console.log(error));
+        .catch((error) => "");
     } catch (error) {
       // Handle errors
-      console.error(error);
     }
   };
 
   const fetchConfigurationToCorrespondingSpecification = async (
     selectedSpecificationId
   ) => {
-    console.log(selectedSpecificationId);
     await axios.get("http://localhost:1111/configuration").then((res) => {
-      console.log(res, "selectedSpecificationId", selectedSpecificationId);
       setAllConfigurations(
         res.data.filter((e) => {
-          console.log(selectedSpecificationId, e.specificationId);
           return e.specificationId == selectedSpecificationId;
         })
       );
@@ -187,7 +168,6 @@ const EditProduct = ({ productId, closeEditProduct }) => {
   };
 
   useEffect(() => {
-    console.log(productDetails.image);
     productDetails.specificationId &&
       fetchConfigurationToCorrespondingSpecification(
         productDetails.specificationId
@@ -228,7 +208,9 @@ const EditProduct = ({ productId, closeEditProduct }) => {
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={productDetails.itemCategory}
+                    value={
+                      productDetails.itemCategory && productDetails.itemCategory
+                    }
                     label="Sub Specification"
                     onChange={(e) =>
                       setProductDetails((prev) => ({
@@ -239,7 +221,6 @@ const EditProduct = ({ productId, closeEditProduct }) => {
                   >
                     {allItemCategories &&
                       allItemCategories.map((e, i) => {
-                        // console.log(e);
                         return (
                           <MenuItem key={e._id} value={e._id}>
                             {e.name}
@@ -268,7 +249,7 @@ const EditProduct = ({ productId, closeEditProduct }) => {
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={productDetails.brand}
+                    value={productDetails.brand && productDetails.brand}
                     label="Sub Specification"
                     onChange={(e) =>
                       setProductDetails((prev) => ({
@@ -279,7 +260,6 @@ const EditProduct = ({ productId, closeEditProduct }) => {
                   >
                     {allBrands &&
                       allBrands.map((e, i) => {
-                        // console.log(e);
                         return (
                           <MenuItem key={e._id} value={e._id}>
                             {e.name}
@@ -295,7 +275,7 @@ const EditProduct = ({ productId, closeEditProduct }) => {
           <div className="flex space-between ">
             <label className="w-[200px]">Title : </label>
             <input
-              value={productDetails.title}
+              value={productDetails.title && productDetails.title}
               type="text"
               className="border-2 border-slate-400 rounded-md w-full px-4 py-1"
               onChange={(e) =>
@@ -315,7 +295,7 @@ const EditProduct = ({ productId, closeEditProduct }) => {
               Price :{" "}
             </label>
             <input
-              value={productDetails.price}
+              value={productDetails.price && productDetails.price}
               type="text"
               className="border-2 border-slate-400 rounded-md w-full px-4 py-1"
               onChange={(e) =>
@@ -331,7 +311,7 @@ const EditProduct = ({ productId, closeEditProduct }) => {
               Description :{" "}
             </label>
             <input
-              value={productDetails.description}
+              value={productDetails.description && productDetails.description}
               type="text"
               className="border-2 border-slate-400 rounded-md w-full px-4 py-1"
               onChange={(e) =>
@@ -347,7 +327,10 @@ const EditProduct = ({ productId, closeEditProduct }) => {
               Available Quantity <span>: </span>
             </label>
             <input
-              value={productDetails.availableQuantity}
+              value={
+                productDetails.availableQuantity &&
+                productDetails.availableQuantity
+              }
               type="number"
               className="border-2 border-slate-400 rounded-md w-full px-4 py-1"
               onChange={(e) =>

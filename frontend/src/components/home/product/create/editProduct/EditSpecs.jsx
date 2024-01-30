@@ -11,7 +11,9 @@ import { useSnackbar } from "notistack";
 import axios from "axios";
 
 const EditSpecs = ({ setSpecsData, specDetails }) => {
+  // State to hold all specifications
   const [allSpecifications, setAllSpecifications] = useState([]);
+  // State to hold all configurations
   const [allConfigurations, setAllConfigurations] = useState([]);
 
   const [specsCount, setSpecsCount] = useState(1);
@@ -26,28 +28,30 @@ const EditSpecs = ({ setSpecsData, specDetails }) => {
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    console.log("specDetails", specDetails);
     fetchSpecification();
   }, []);
 
   useEffect(() => {
-    console.log("All configurations:", allConfigurations);
-  }, [allConfigurations]);
+    specDetails && specDetails[0] && setSpecDetails();
+  }, [specDetails]);
 
+  const setSpecDetails = () => {
+    const productSpecs = specDetails.map((spec, idx) => {
+      handleSpecificationChange(spec.specificationId, idx);
+      handleConfigurationChange(spec.configurationId, idx);
+    });
+  };
   useEffect(() => {
-    console.log("Specs array:", specsArray);
     setSpecsData(specsArray);
   }, [specsArray]);
 
   const fetchSpecification = async () => {
-    console.log("fetch");
     await axios
       .get("http://localhost:1111/specification")
       .then((res) => {
-        console.log("fetch specification", res.data);
         setAllSpecifications((prev) => [...res.data]);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => "");
   };
 
   const handleEditSpecs = () => {
@@ -80,21 +84,16 @@ const EditSpecs = ({ setSpecsData, specDetails }) => {
     });
   };
 
+  // Fetch configurations for the selected specification
   const fetchConfigurationToCorrespondingSpecification = async (
     selectedSpecificationId,
     index
   ) => {
-    console.log("configuration check");
-    console.log(selectedSpecificationId);
-
     await axios.get("http://localhost:1111/configuration").then((res) => {
-      console.log(res, "selectedSpecificationId", selectedSpecificationId);
       const configData = res.data.filter((e) => {
-        console.log(selectedSpecificationId, e.specificationId);
         return e.specificationId == selectedSpecificationId;
       });
       setAllConfigurations((prev) => {
-        console.log("configData", configData);
         const updatedConfigurations = [...prev];
         updatedConfigurations[index] = configData; // Update the array element at the specified index
         return updatedConfigurations;
@@ -102,6 +101,7 @@ const EditSpecs = ({ setSpecsData, specDetails }) => {
     });
   };
 
+  // Handle change of specification dropdown
   const handleSpecificationChange = (specification, index) => {
     setSpecsArray((prev) => [
       ...prev.slice(0, index),
@@ -111,9 +111,11 @@ const EditSpecs = ({ setSpecsData, specDetails }) => {
       },
       ...prev.slice(index + 1),
     ]);
+    // Fetch configurations for the selected specification
     fetchConfigurationToCorrespondingSpecification(specification, index);
   };
 
+  // Handle change of configuration dropdown
   const handleConfigurationChange = (configuration, index) => {
     setSpecsArray((prev) => [
       ...prev.slice(0, index),
@@ -155,34 +157,26 @@ const EditSpecs = ({ setSpecsData, specDetails }) => {
                           id="demo-simple-select"
                           name="specification"
                           style={{ borderColor: "red" }}
-                          value={item.specs.specificationId}
+                          value={
+                            item.specs.specificationId &&
+                            item.specs.specificationId
+                          }
                           label="Specs"
                           onChange={(e) =>
                             handleSpecificationChange(e.target.value, index)
                           }
                         >
-                          {allSpecifications
-                            .filter((spec) =>
-                              specsArray.some((item) => {
-                                console.log(
-                                  "category",
-                                  item.specs.specificationId == spec._id
-                                );
-                                return item.specs.specificationId === spec._id;
-                              })
-                            )
-                            .map((e, i) => {
-                              console.log(e);
-                              return (
-                                <MenuItem
-                                  key={e._id}
-                                  value={e._id}
-                                  style={{ borderColor: "red" }}
-                                >
-                                  {e.name}
-                                </MenuItem>
-                              );
-                            })}
+                          {allSpecifications.map((e, i) => {
+                            return (
+                              <MenuItem
+                                key={e._id}
+                                value={e._id && e._id}
+                                style={{ borderColor: "red" }}
+                              >
+                                {e.name}
+                              </MenuItem>
+                            );
+                          })}
                         </Select>
                       </FormControl>
                     </Box>
@@ -207,7 +201,10 @@ const EditSpecs = ({ setSpecsData, specDetails }) => {
                         <Select
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
-                          value={item.specs.configurationId || ""}
+                          value={
+                            item.specs.configurationId &&
+                            item.specs.configurationId
+                          }
                           label="Sub Specification"
                           onChange={(e) =>
                             handleConfigurationChange(e.target.value, index)
@@ -215,11 +212,10 @@ const EditSpecs = ({ setSpecsData, specDetails }) => {
                         >
                           {allConfigurations[index] &&
                             allConfigurations[index].map((configuration) => {
-                              console.log(configuration);
                               return (
                                 <MenuItem
                                   key={configuration._id}
-                                  value={configuration._id}
+                                  value={configuration._id && configuration._id}
                                 >
                                   {configuration.name}
                                 </MenuItem>
